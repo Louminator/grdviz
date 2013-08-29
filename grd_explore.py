@@ -83,26 +83,30 @@ class Plot_Widget(QWidget,Ui_Form):
         self.close()
         
     def play(self):
-        print self.Play.isChecked()
         self.timer.start(200)
             
     def pause(self):
         self.timer.stop()
+        if (self.CurrentFrame.value() in self.FrameQueue):
+            self.FrameQueue.remove(self.CurrentFrame.value())
+            self.FrameQueue.insert(0,self.CurrentFrame.value())
             
     def playUpdate(self):
+        x = self.CurrentFrame.value()
         if self.Play.isChecked():
             if (self.CurrentFrame.value()>100):
                 self.CurrentFrame.setValue(99)
                 self.timer.stop()
                 self.Pause.setChecked(True)
-            self.CurrentFrame.setValue(self.CurrentFrame.value()+1)
+            self.CurrentFrame.setValue(x+1)
             self.newplot()
         if self.Rewind.isChecked():
             if (self.CurrentFrame.value() == 0):
                 self.CurrentFrame.setValue(1)
                 self.timer.stop()
                 self.Pause.setChecked(True)
-            self.CurrentFrame.setValue(self.CurrentFrame.value()-1)
+            self.CurrentFrame.setValue(x-1)
+            self.CurrentFrame.update()
             self.newplot()            
 
     def mplwheelEvent(self,event):
@@ -128,8 +132,8 @@ class Plot_Widget(QWidget,Ui_Form):
     def newplot(self):
         a=self.CurrentFrame.value()
         
-        print self.FrameThreads
-        print self.FrameQueue
+#        print self.FrameThreads
+#        print self.FrameQueue
         
         if  (not a in self.grddata):
             self.grddata[a] = Vorticity_Frame(a)
@@ -145,6 +149,9 @@ class Plot_Widget(QWidget,Ui_Form):
                         self.FrameQueue.insert(0,a)
                     else:
                         self.FrameQueue.append(a)
+                elif (self.Pause.isChecked()):
+                    self.FrameQueue.remove(a)
+                    self.FrameQueue.insert(0,a)
         
         if (self.grddata[a].MeshReady() == 2):
             self.grddata[a].GrabMesh()
@@ -165,37 +172,6 @@ class Plot_Widget(QWidget,Ui_Form):
             self.mplwidget.axes.text(xmid,ymid,'Working...',fontsize=18, \
                 horizontalalignment='center',verticalalignment='center',color='red')
             self.mplwidget.draw()
-
-    def newplot3(self):
-        a=self.CurrentFrame.value()
-        
-        if a in self.grddata:
-            meshdata = self.grddata[a]
-        else:
-            meshdata = self.read_grd(a)
-            self.grddata[a] = meshdata
-            
-        x = linspace(self.num[0],self.num[2],self.gridn)
-        y = linspace(self.num[1],self.num[3],self.gridn)
-        
-#        meshdata = meshdata[::2,::2]
-#        x = x[::2]
-#        y = y[::2]
-        X,Y = meshgrid(x, y)
-        
-#        self.mplwidget.axes.pcolor(X,Y,meshdata,edgecolors='None',shading='faceted',rasterized=True)
-        self.mplwidget.axes.pcolormesh(X,Y,meshdata,edgecolors='None',shading='None',rasterized=True)
-        self.mplwidget.axes.set_xlim((self.xMin.value(),self.xMax.value()))
-        self.mplwidget.axes.set_ylim((self.yMin.value(),self.yMax.value()))
-        
-        xmid = (x[0]+x[-1])/2.
-        ymid = (x[0]+x[-1])/2.
-        self.mplwidget.axes.text(xmid,ymid,'Working...',fontsize=18, \
-            horizontalalignment='center',verticalalignment='center',color='red')
-        
-#        self.mplwidget.axes.contour(X,Y,meshdata,rasterized=True)
-#        self.mplwidget.axes.colorbar()
-        self.mplwidget.draw()
 
     def plot(self, axes):
         self.newplot()
