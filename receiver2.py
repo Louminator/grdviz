@@ -14,8 +14,6 @@ import threading
 def waiting():
     print 'waiting...'
 
-
-
 address = ('jeremyfisher.math.udel.edu', 6000)     # family is deduced to be 'AF_INET'
 listener = Listener(address, authkey='secret password')
 timer = threading.Timer(10.0, waiting)
