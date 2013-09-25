@@ -8,8 +8,6 @@ Created on Mon Sep  2 17:25:24 2013
 from multiprocessing.connection import Listener
 from array import array
 
-#address = ('jeremyfisher.math.udel.edu', 6000)     # family is deduced to be 'AF_INET'
-address = ('nutkin', 6000)     # family is deduced to be 'AF_INET'
 listener = Listener(address, authkey='secret password')
 
 while True:
