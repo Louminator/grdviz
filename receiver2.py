@@ -8,6 +8,7 @@ Created on Mon Sep  2 17:25:24 2013
 from multiprocessing.connection import Listener
 from array import array
 
+address = ('jeremyfisher.math.udel.edu', 6000)
 listener = Listener(address, authkey='secret password')
 
 while True:
