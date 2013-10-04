@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mpltest.ui'
 #
-# Created: Tue Aug  6 18:30:27 2013
+# Created: Fri Oct  4 13:15:08 2013
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -109,6 +109,9 @@ class Ui_Form(object):
         self.yMax.setSingleStep(0.1)
         self.yMax.setProperty("value", 1.0)
         self.yMax.setObjectName(_fromUtf8("yMax"))
+        self.yMinDial = QtGui.QDial(Form)
+        self.yMinDial.setGeometry(QtCore.QRect(209, 210, 51, 51))
+        self.yMinDial.setObjectName(_fromUtf8("yMinDial"))
 
         self.retranslateUi(Form)
         QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), Form.quit_gui)

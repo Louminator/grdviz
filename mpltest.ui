@@ -227,6 +227,16 @@
     <double>1.000000000000000</double>
    </property>
   </widget>
+  <widget class="QDial" name="yMinDial">
+   <property name="geometry">
+    <rect>
+     <x>209</x>
+     <y>210</y>
+     <width>51</width>
+     <height>51</height>
+    </rect>
+   </property>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>
