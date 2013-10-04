@@ -10,7 +10,7 @@ from scipy import *
 from string import split,atof,atoi
 
 from vtx import *
-from event import Event
+#from event import Event
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -26,6 +26,7 @@ class Plot_Widget(QWidget,Ui_Form):
         self.FrameQueue =  []
 
         QWidget.__init__(self)
+        
         super(Plot_Widget, self).__init__(parent)
         self.setupUi(self)
 #        self.mplwidget = MatplotlibWidget(self, title='Example',
@@ -35,6 +36,7 @@ class Plot_Widget(QWidget,Ui_Form):
 #        self.mplwidget.setFocus()
 #        self.setCentralWidget(self.mplwidget)
 
+# Default domain values
         try:
             f = open('/home/rossi/Research/Oseen-explorations/expB-lowres/egrid.default','r')
             txt = f.read()
@@ -48,12 +50,32 @@ class Plot_Widget(QWidget,Ui_Form):
             self.yMin.setValue(self.num[1])
             self.yMax.setValue(self.num[3])
             
-            self.xMin.setSingleStep((self.num[2]-self.num[0])/(self.gridn-1.))
-            self.yMin.setSingleStep((self.num[3]-self.num[1])/(self.gridn-1.))
-            self.xMax.setSingleStep((self.num[2]-self.num[0])/(self.gridn-1.))
-            self.yMax.setSingleStep((self.num[3]-self.num[1])/(self.gridn-1.))
+            self.xScale = (self.num[2]-self.num[0])/(self.gridn-1.)
+            self.yScale = (self.num[3]-self.num[1])/(self.gridn-1.)
+            
+            self.xMin.setSingleStep(self.xScale)
+            self.xMinDial.setMinimum(0)
+            self.xMinDial.setMaximum(self.gridn-1)
+            self.xMinDial.setValue(0)
+            
+            self.yMin.setSingleStep(self.yScale)
+            self.yMinDial.setMinimum(0)
+            self.yMinDial.setMaximum(self.gridn-1)
+            self.yMinDial.setValue(0)
+            
+            self.xMax.setSingleStep(self.xScale)
+            self.xMaxDial.setMinimum(0)
+            self.xMaxDial.setMaximum(self.gridn-1)
+            self.xMaxDial.setValue(self.gridn-1)
+            
+            self.yMax.setSingleStep(self.yScale)
+            self.yMaxDial.setMinimum(0)
+            self.yMaxDial.setMaximum(self.gridn-1)
+            self.yMaxDial.setValue(self.gridn-1)
+            
         except IOError:
             print "No egrid.default file found."
+        
             
         self.plot(self.mplwidget.axes)
 #        QtCore.QObject.connect(self.timeDial, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.newplot)
@@ -79,6 +101,40 @@ class Plot_Widget(QWidget,Ui_Form):
             print "No grd file found."
         return(w)
         
+    def xMinDialChanged(self,value):
+        if (self.xMinDial.value()<self.xMaxDial.value()):
+            self.xMin.setValue(self.num[0] + self.xMinDial.value()*self.xScale)
+        else:
+            self.xMinDial.setValue(self.xMaxDial.value()-1)
+
+    def xMaxDialChanged(self,value):
+        if (self.xMinDial.value()<self.xMaxDial.value()):
+            self.xMax.setValue(self.num[0] + self.xMaxDial.value()*self.xScale)
+        else:
+            self.xMaxDial.setValue(self.xMinDial.value()+1)
+
+    def yMinDialChanged(self,value):
+        if (self.yMinDial.value()<self.yMaxDial.value()):
+            self.yMin.setValue(self.num[1] + self.yMinDial.value()*self.yScale)
+        else:
+            self.yMinDial.setValue(self.yMaxDial.value()-1)
+        
+    def yMaxDialChanged(self,value):
+        if (self.yMinDial.value()<self.yMaxDial.value()):
+            self.yMax.setValue(self.num[1] + self.yMaxDial.value()*self.yScale)
+        else:
+            self.yMaxDial.setValue(self.yMinDial.value()+1)
+        
+    def xMinChanged(self,value):
+        self.xMinDial.setValue((int) ((self.xMin.value()-self.num[0])/self.xScale + 0.5))
+    def xMaxChanged(self,value):
+        self.xMaxDial.setValue((int) ((self.xMax.value()-self.num[0])/self.xScale + 0.5))
+        
+    def yMinChanged(self,value):
+        self.yMinDial.setValue((int) ((self.yMin.value()-self.num[1])/self.yScale + 0.5))
+    def yMaxChanged(self,value):
+        self.yMaxDial.setValue((int) ((self.yMax.value()-self.num[1])/self.yScale + 0.5))
+                
     def quit_gui(self):
         self.close()
         
@@ -172,6 +228,7 @@ class Plot_Widget(QWidget,Ui_Form):
             self.mplwidget.axes.text(xmid,ymid,'Working...',fontsize=18, \
                 horizontalalignment='center',verticalalignment='center',color='red')
             self.mplwidget.draw()
+            
 
     def plot(self, axes):
         self.newplot()
