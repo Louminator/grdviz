@@ -3,7 +3,7 @@ from PyQt4.QtGui import QWidget
 
 import sys
 
-from mpltest import Ui_Form
+from mpltest import Ui_BlobFlowExplorer
 from matplotlibwidget import *
 
 from scipy import *
@@ -17,7 +17,7 @@ try:
 except AttributeError:
     _fromUtf8 = lambda s: s
 
-class Plot_Widget(QWidget,Ui_Form):
+class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
     def __init__(self, data2plot=None, parent = None):
         self.grddata = {}
         self.MaxThreads = 4
@@ -129,11 +129,20 @@ class Plot_Widget(QWidget,Ui_Form):
         self.xMinDial.setValue((int) ((self.xMin.value()-self.num[0])/self.xScale + 0.5))
     def xMaxChanged(self,value):
         self.xMaxDial.setValue((int) ((self.xMax.value()-self.num[0])/self.xScale + 0.5))
+        print (int) ((self.xMax.value()-self.num[0])/self.xScale + 0.5)
         
     def yMinChanged(self,value):
         self.yMinDial.setValue((int) ((self.yMin.value()-self.num[1])/self.yScale + 0.5))
     def yMaxChanged(self,value):
         self.yMaxDial.setValue((int) ((self.yMax.value()-self.num[1])/self.yScale + 0.5))
+        
+    def ResetZoomx(self):
+        self.xMin.setValue(self.num[0])
+        self.xMax.setValue(self.num[2])
+        
+    def ResetZoomy(self):        
+        self.yMin.setValue(self.num[1])
+        self.yMax.setValue(self.num[3])
                 
     def quit_gui(self):
         self.close()
