@@ -21,7 +21,7 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
     def __init__(self, data2plot=None, parent = None):
         self.grddata = {}
         self.MaxThreads = 4
-        self.NMesh = 75
+        self.NMesh = 80
         self.FrameThreads = []
         self.FrameQueue =  []
 
@@ -50,28 +50,28 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
             self.yMin.setValue(self.num[1])
             self.yMax.setValue(self.num[3])
             
-            self.xScale = (self.num[2]-self.num[0])/(self.gridn-1.)
-            self.yScale = (self.num[3]-self.num[1])/(self.gridn-1.)
+            self.xScale = (self.num[2]-self.num[0])/(self.NMesh-1.)
+            self.yScale = (self.num[3]-self.num[1])/(self.NMesh-1.)
             
             self.xMin.setSingleStep(self.xScale)
             self.xMinDial.setMinimum(0)
-            self.xMinDial.setMaximum(self.gridn-1)
+            self.xMinDial.setMaximum(self.NMesh-1)
             self.xMinDial.setValue(0)
             
             self.yMin.setSingleStep(self.yScale)
             self.yMinDial.setMinimum(0)
-            self.yMinDial.setMaximum(self.gridn-1)
+            self.yMinDial.setMaximum(self.NMesh-1)
             self.yMinDial.setValue(0)
             
             self.xMax.setSingleStep(self.xScale)
             self.xMaxDial.setMinimum(0)
-            self.xMaxDial.setMaximum(self.gridn-1)
-            self.xMaxDial.setValue(self.gridn-1)
+            self.xMaxDial.setMaximum(self.NMesh-1)
+            self.xMaxDial.setValue(self.NMesh-1)
             
             self.yMax.setSingleStep(self.yScale)
             self.yMaxDial.setMinimum(0)
-            self.yMaxDial.setMaximum(self.gridn-1)
-            self.yMaxDial.setValue(self.gridn-1)
+            self.yMaxDial.setMaximum(self.NMesh-1)
+            self.yMaxDial.setValue(self.NMesh-1)
             
         except IOError:
             print "No egrid.default file found."
