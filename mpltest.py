@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mpltest.ui'
 #
-# Created: Sun Oct  6 23:04:34 2013
+# Created: Mon Oct  7 00:22:45 2013
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -167,7 +167,7 @@ class Ui_BlobFlowExplorer(object):
         QtCore.QMetaObject.connectSlotsByName(BlobFlowExplorer)
 
     def retranslateUi(self, BlobFlowExplorer):
-        BlobFlowExplorer.setWindowTitle(QtGui.QApplication.translate("BlobFlowExplorer", "Form", None, QtGui.QApplication.UnicodeUTF8))
+        BlobFlowExplorer.setWindowTitle(QtGui.QApplication.translate("BlobFlowExplorer", "BlobFlow Explorer", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton.setText(QtGui.QApplication.translate("BlobFlowExplorer", "Quit", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("BlobFlowExplorer", "Play", None, QtGui.QApplication.UnicodeUTF8))
         self.Play.setText(QtGui.QApplication.translate("BlobFlowExplorer", "Forward", None, QtGui.QApplication.UnicodeUTF8))

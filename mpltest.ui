@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>BlobFlow Explorer</string>
   </property>
   <widget class="MatplotlibWidget" name="mplwidget">
    <property name="geometry">
