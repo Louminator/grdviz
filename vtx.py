@@ -13,7 +13,7 @@ from string import split,atof
 from PyQt4 import QtCore, QtGui
 
 from multiprocessing import Process,Pipe
-
+from multiprocessing.connection import Client
 
 # Read in from the file.
 

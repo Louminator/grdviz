@@ -7,6 +7,7 @@ Created on Mon Sep  2 17:25:24 2013
 
 from multiprocessing.connection import Listener
 from array import array
+import pickle
 
 address = ('jeremyfisher.math.udel.edu', 6000)
 listener = Listener(address, authkey='secret password')
@@ -18,11 +19,13 @@ while True:
         print conn.poll()
         if conn.poll(1):
             msg = conn.recv()
-            print msg
             # do something with msg
             if msg == 'close':
                 conn.close()
                 break
+            else:
+                print pickle.loads(msg)
+
         else:
             print "Waiting for something to happen."
 
