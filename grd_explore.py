@@ -3,7 +3,7 @@ from PyQt4.QtGui import QWidget
 
 import sys
 
-from mpltest import Ui_Form
+from mpltest import Ui_BlobFlowExplorer
 from matplotlibwidget import *
 
 from scipy import *
@@ -17,11 +17,11 @@ try:
 except AttributeError:
     _fromUtf8 = lambda s: s
 
-class Plot_Widget(QWidget,Ui_Form):
+class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
     def __init__(self, data2plot=None, parent = None):
         self.grddata = {}
         self.MaxThreads = 4
-        self.NMesh = 75
+        self.NMesh = 80
         self.FrameThreads = []
         self.FrameQueue =  []
 
@@ -50,28 +50,28 @@ class Plot_Widget(QWidget,Ui_Form):
             self.yMin.setValue(self.num[1])
             self.yMax.setValue(self.num[3])
             
-            self.xScale = (self.num[2]-self.num[0])/(self.gridn-1.)
-            self.yScale = (self.num[3]-self.num[1])/(self.gridn-1.)
+            self.xScale = (self.num[2]-self.num[0])/(self.NMesh-1.)
+            self.yScale = (self.num[3]-self.num[1])/(self.NMesh-1.)
             
             self.xMin.setSingleStep(self.xScale)
             self.xMinDial.setMinimum(0)
-            self.xMinDial.setMaximum(self.gridn-1)
+            self.xMinDial.setMaximum(self.NMesh-1)
             self.xMinDial.setValue(0)
             
             self.yMin.setSingleStep(self.yScale)
             self.yMinDial.setMinimum(0)
-            self.yMinDial.setMaximum(self.gridn-1)
+            self.yMinDial.setMaximum(self.NMesh-1)
             self.yMinDial.setValue(0)
             
             self.xMax.setSingleStep(self.xScale)
             self.xMaxDial.setMinimum(0)
-            self.xMaxDial.setMaximum(self.gridn-1)
-            self.xMaxDial.setValue(self.gridn-1)
+            self.xMaxDial.setMaximum(self.NMesh-1)
+            self.xMaxDial.setValue(self.NMesh-1)
             
             self.yMax.setSingleStep(self.yScale)
             self.yMaxDial.setMinimum(0)
-            self.yMaxDial.setMaximum(self.gridn-1)
-            self.yMaxDial.setValue(self.gridn-1)
+            self.yMaxDial.setMaximum(self.NMesh-1)
+            self.yMaxDial.setValue(self.NMesh-1)
             
         except IOError:
             print "No egrid.default file found."
@@ -129,11 +129,20 @@ class Plot_Widget(QWidget,Ui_Form):
         self.xMinDial.setValue((int) ((self.xMin.value()-self.num[0])/self.xScale + 0.5))
     def xMaxChanged(self,value):
         self.xMaxDial.setValue((int) ((self.xMax.value()-self.num[0])/self.xScale + 0.5))
+        print (int) ((self.xMax.value()-self.num[0])/self.xScale + 0.5)
         
     def yMinChanged(self,value):
         self.yMinDial.setValue((int) ((self.yMin.value()-self.num[1])/self.yScale + 0.5))
     def yMaxChanged(self,value):
         self.yMaxDial.setValue((int) ((self.yMax.value()-self.num[1])/self.yScale + 0.5))
+        
+    def ResetZoomx(self):
+        self.xMin.setValue(self.num[0])
+        self.xMax.setValue(self.num[2])
+        
+    def ResetZoomy(self):        
+        self.yMin.setValue(self.num[1])
+        self.yMax.setValue(self.num[3])
                 
     def quit_gui(self):
         self.close()
