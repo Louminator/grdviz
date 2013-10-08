@@ -13,7 +13,7 @@ from scipy import *
 
 import pickle
 
-import thread
+#import thread
 #import threading
 
 def waiting():

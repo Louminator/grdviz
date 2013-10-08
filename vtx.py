@@ -14,6 +14,7 @@ from PyQt4 import QtCore, QtGui
 
 from multiprocessing import Process,Pipe
 from multiprocessing.connection import Client
+import pickle
 
 # Read in from the file.
 
@@ -22,6 +23,21 @@ n = 1
 class Vorticity_Frame():
     
     def __init__(self,n):
+        
+        def TryToConnect(child,n):
+            address = ('jeremyfisher.math.udel.edu', 6000)
+            #address = ('nutkin', 6000)
+            conn = Client(address, authkey='secret password')
+        #    conn.send('hi')
+            conn.send(pickle.dumps(n,pickle.HIGHEST_PROTOCOL))
+            vdata = pickle.loads(conn.recv())
+            conn.send('close')
+            print len(vdata)
+            # can also send arbitrary objects:
+            # conn.send(['a', 2.5, None, int, sum])
+            conn.close()
+    #        child.send('All done')
+            child.send(vdata)
         
         self.FrameNumber = n
 
@@ -34,23 +50,36 @@ class Vorticity_Frame():
         # GridStatus: 0=no grid, 1=working on grid, 2=grid created
         # GridStatus: -1 = no data at all.
         self.GridStatus = 0
+        
+        parent_conn,child_conn = Pipe()
+        proc = Process(target=TryToConnect,args=(child_conn,self.FrameNumber))
+        proc.start()
+        
+        waitingcount = 0
+        while (not parent_conn.poll()):
+            waitingcount += 1
+            
+        self.vdata = parent_conn.recv()
+        self.num_vorts = len(self.vdata)
+        print "Success"
+        print waitingcount
 
         self.timer = QtCore.QTimer()
         QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout()"), self.MeshReady)
-        
-        name = '/home/rossi/Research/Oseen-explorations/lamb-dipole-perturb-B/lamb-perturb-B'
-        vtxname = name+'{0:04d}'.format(n)+'.vtx'
-        try:
-            f = open(vtxname,'r')
-            txt = f.read()
-            f.close()
-            vs = split(txt)
-            vdata = map(atof,vs)
-            self.vdata = reshape(vdata,(len(vdata)/6,6))
-            self.num_vorts = len(vdata)
-        except IOError:
-            print "No vtx file found."
-            self.GridStatus = -1
+
+#        name = '/home/rossi/Research/Oseen-explorations/lamb-dipole-perturb-B/lamb-perturb-B'
+#        vtxname = name+'{0:04d}'.format(n)+'.vtx'
+#        try:
+#            f = open(vtxname,'r')
+#            txt = f.read()
+#            f.close()
+#            vs = split(txt)
+#            vdata = map(atof,vs)
+#            self.vdata = reshape(vdata,(len(vdata)/6,6))
+#            self.num_vorts = len(vdata)
+#        except IOError:
+#            print "No vtx file found."
+#            self.GridStatus = -1
 
 # mesh it.
 
