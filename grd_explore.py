@@ -129,7 +129,6 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
         self.xMinDial.setValue((int) ((self.xMin.value()-self.num[0])/self.xScale + 0.5))
     def xMaxChanged(self,value):
         self.xMaxDial.setValue((int) ((self.xMax.value()-self.num[0])/self.xScale + 0.5))
-        print (int) ((self.xMax.value()-self.num[0])/self.xScale + 0.5)
         
     def yMinChanged(self,value):
         self.yMinDial.setValue((int) ((self.yMin.value()-self.num[1])/self.yScale + 0.5))

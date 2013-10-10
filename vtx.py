@@ -60,6 +60,8 @@ class Vorticity_Frame():
             waitingcount += 1
             
         self.vdata = parent_conn.recv()
+        proc.join()
+        proc.terminate()
         self.num_vorts = len(self.vdata)
         print "Success"
         print waitingcount
@@ -153,6 +155,8 @@ class Vorticity_Frame():
     def GrabMesh(self):
         if (self.parent_conn.poll()):
             self.xm,self.ym,self.wm = self.parent_conn.recv()
+            self.proc.join()
+            self.proc.terminate()
             self.GridStatus=2
 
     def MeshReady(self):
