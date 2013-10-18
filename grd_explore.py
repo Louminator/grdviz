@@ -196,11 +196,11 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
     def newplot(self):
         a=self.CurrentFrame.value()
         
-#        print self.FrameThreads
-#        print self.FrameQueue
-        
         if  (not a in self.grddata):
             self.grddata[a] = Vorticity_Frame(a)
+        print "Mesh ready..."
+        print self.grddata[a].MeshReady()
+        print len(self.grddata[a].vdata)
             
         if (self.grddata[a].MeshReady() == 0):
             if (len(self.FrameThreads) < self.MaxThreads):
@@ -226,21 +226,23 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
             self.mplwidget.axes.set_xlim((self.xMin.value(),self.xMax.value()))
             self.mplwidget.axes.set_ylim((self.yMin.value(),self.yMax.value()))
             self.mplwidget.draw()
-
         else:
             self.mplwidget.axes.cla()
             self.mplwidget.axes.set_xlim((self.xMin.value(),self.xMax.value()))
             self.mplwidget.axes.set_ylim((self.yMin.value(),self.yMax.value()))
             xmid = (self.xMin.value()+self.xMax.value())/2.
             ymid = (self.yMin.value()+self.yMax.value())/2.
-            self.mplwidget.axes.text(xmid,ymid,'Working...',fontsize=18, \
-                horizontalalignment='center',verticalalignment='center',color='red')
-            self.mplwidget.draw()
-            
-
+            if (self.grddata[a].MeshReady() == 0):
+                self.mplwidget.axes.text(xmid,ymid,'Working...',fontsize=18, \
+                    horizontalalignment='center',verticalalignment='center',color='red')
+                self.mplwidget.draw()
+            elif (self.grddata[a].MeshReady() == -1):
+                self.mplwidget.axes.text(xmid,ymid,'Uploading...',fontsize=18, \
+                    horizontalalignment='center',verticalalignment='center',color='red')
+                self.mplwidget.draw()
+ 
     def plot(self, axes):
         self.newplot()
-
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)

@@ -11,7 +11,8 @@ import pickle
 from scipy import *
 from string import split,atof,atoi
 
-address = ('jeremyfisher.math.udel.edu', 6000)
+address = ('localhost', 6000)
+#address = ('jeremyfisher.math.udel.edu', 6000)
 listener = Listener(address, authkey='secret password')
 
 #name = '/home/rossi/Research/Oseen-explorations/lamb-dipole-perturb-B/lamb-perturb-B'
@@ -32,7 +33,6 @@ while True:
     conn = listener.accept()
     print 'connection accepted from', listener.last_accepted
     while True:
-        print conn.poll()
         if conn.poll(1):
             msg = conn.recv()
             # do something with msg

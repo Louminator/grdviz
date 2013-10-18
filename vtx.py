@@ -15,6 +15,7 @@ from PyQt4 import QtCore, QtGui
 from multiprocessing import Process,Pipe
 from multiprocessing.connection import Client
 import pickle
+import threading
 
 # Read in from the file.
 
@@ -25,19 +26,16 @@ class Vorticity_Frame():
     def __init__(self,n):
         
         def TryToConnect(child,n):
-            address = ('jeremyfisher.math.udel.edu', 6000)
+            address = ('localhost', 6000)
+            #address = ('jeremyfisher.math.udel.edu', 6000)
             #address = ('nutkin', 6000)
             conn = Client(address, authkey='secret password')
-        #    conn.send('hi')
             conn.send(pickle.dumps(n,pickle.HIGHEST_PROTOCOL))
             vdata = pickle.loads(conn.recv())
             conn.send('close')
             print len(vdata)
-            # can also send arbitrary objects:
-            # conn.send(['a', 2.5, None, int, sum])
             conn.close()
-    #        child.send('All done')
-            child.send(vdata)
+            child.send(vdata)            
         
         self.FrameNumber = n
 
@@ -46,25 +44,33 @@ class Vorticity_Frame():
 
         self.x1 = 2.
         self.y1 = 2.
+        self.vdata = []
         
         # GridStatus: 0=no grid, 1=working on grid, 2=grid created
         # GridStatus: -1 = no data at all.
-        self.GridStatus = 0
+        self.GridStatus = -1
         
-        parent_conn,child_conn = Pipe()
-        proc = Process(target=TryToConnect,args=(child_conn,self.FrameNumber))
-        proc.start()
+#        self.UploadAttemptTimer = QtCore.QTimer()
+#        QtCore.QObject.connect(self.UploadAttemptTimer, QtCore.SIGNAL("timeout()"), self.DataArrived)
+        self.UploadAttemptTimer = threading.Timer(0.5,self.DataArrived)
+        self.UploadWait = 0
+
+        self.parent_conn,self.child_conn = Pipe()
+        self.UploadProc = Process(target=TryToConnect,args=(self.child_conn,self.FrameNumber))
+        self.UploadProc.start()
+        self.UploadAttemptTimer.start()
+#        self.UploadAttemptTimer.start(100)
         
-        waitingcount = 0
-        while (not parent_conn.poll()):
-            waitingcount += 1
-            
-        self.vdata = parent_conn.recv()
-        proc.join()
-        proc.terminate()
-        self.num_vorts = len(self.vdata)
-        print "Success"
-        print waitingcount
+#        waitingcount = 0
+#        while (not parent_conn.poll()):
+#            waitingcount += 1
+#            
+#        self.vdata = parent_conn.recv()
+#        proc.join()
+#        proc.terminate()
+#        self.num_vorts = len(self.vdata)
+#        print "Success"
+#        print waitingcount
 
         self.timer = QtCore.QTimer()
         QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout()"), self.MeshReady)
@@ -84,10 +90,37 @@ class Vorticity_Frame():
 #            self.GridStatus = -1
 
 # mesh it.
+    def DataArrived(self):
+        if (self.GridStatus == -1):
+            if (self.parent_conn.poll()):
+                self.vdata = self.parent_conn.recv()
+                self.UploadProc.join()
+                self.UploadProc.terminate()
+                self.num_vorts = len(self.vdata)
+                self.UploadAttemptTimer.cancel()
+                self.GridStatus = 0
+                print 'ticking...'
+                print self.num_vorts
+            else:
+                print 'tocking...'
+                self.UploadWait += 1
+
+    def DataArrivedAgain(self):
+        if (self.GridStatus == -1):
+            if (self.parent_conn.poll()):
+                self.vdata = self.parent_conn.recv()
+                self.UploadProc.join()
+                self.UploadProc.terminate()
+                self.num_vorts = len(self.vdata)
+                self.UploadAttemptTimer.cancel()
+                self.GridStatus = 0
+                print 'ticking...'
+                print self.num_vorts
+            else:
+                print 'tocking...'
+                self.UploadWait += 1
 
     def mesh(self,nmesh):
-
-#        nmesh = 200
 
         x = r_[self.x0:self.x1:nmesh*1j]
         y = r_[self.y0:self.y1:nmesh*1j]
@@ -150,7 +183,6 @@ class Vorticity_Frame():
         self.timer.start(1000)
         self.GridStatus = 1
         self.alert = AlertFcn
-
         
     def GrabMesh(self):
         if (self.parent_conn.poll()):
