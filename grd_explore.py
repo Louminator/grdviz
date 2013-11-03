@@ -30,12 +30,6 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
         
         super(Plot_Widget, self).__init__(parent)
         self.setupUi(self)
-#        self.mplwidget = MatplotlibWidget(self, title='Example',
-#                                          xlabel='Linear scale',
-#                                          ylabel='Log scale',
-#                                          hold=True, yscale='log')
-#        self.mplwidget.setFocus()
-#        self.setCentralWidget(self.mplwidget)
 
 # Default domain values
         try:
