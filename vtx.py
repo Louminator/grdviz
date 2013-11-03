@@ -15,29 +15,28 @@ from PyQt4 import QtCore, QtGui
 from multiprocessing import Process,Pipe
 from multiprocessing.connection import Client
 import pickle
-import threading
 
 # Read in from the file.
 
-n = 1
-
 class Vorticity_Frame():
     
-    def __init__(self,n):
+    def __init__(self,n,AlertFcn):
         
-        def TryToConnect(child,n):
-            address = ('localhost', 6000)
-            #address = ('jeremyfisher.math.udel.edu', 6000)
-            #address = ('nutkin', 6000)
-            conn = Client(address, authkey='secret password')
-            conn.send(pickle.dumps(n,pickle.HIGHEST_PROTOCOL))
-            vdata = pickle.loads(conn.recv())
-            conn.send('close')
-            print len(vdata)
-            conn.close()
-            child.send(vdata)            
+#        def TryToConnect(child,n):
+#            address = ('localhost', 6000)
+#            #address = ('jeremyfisher.math.udel.edu', 6000)
+#            #address = ('nutkin', 6000)
+#            conn = Client(address, authkey='secret password')
+#            conn.send(pickle.dumps(n,pickle.HIGHEST_PROTOCOL))
+#            vdata = pickle.loads(conn.recv())
+#            conn.send('close')
+#            print 'Received frame {0:d} with {1:d} vortices.'.format(n,len(vdata))
+#            conn.close()
+#            child.send(vdata)            
         
         self.FrameNumber = n
+
+        self.alert = AlertFcn
 
         self.x0 = -2.
         self.y0 = -2.
@@ -46,50 +45,40 @@ class Vorticity_Frame():
         self.y1 = 2.
         self.vdata = []
         
-        # GridStatus: 0=no grid, 1=working on grid, 2=grid created
-        # GridStatus: -1 = no data at all.
+        # GridStatus:
+        # -1 = uploading
+        # 0 = data arrived, no grid
+        # 1 = working on grid
+        # 2 = grid created
+
         self.GridStatus = -1
         
-#        self.UploadAttemptTimer = QtCore.QTimer()
-#        QtCore.QObject.connect(self.UploadAttemptTimer, QtCore.SIGNAL("timeout()"), self.DataArrived)
-        self.UploadAttemptTimer = threading.Timer(0.5,self.DataArrived)
         self.UploadWait = 0
 
         self.parent_conn,self.child_conn = Pipe()
-        self.UploadProc = Process(target=TryToConnect,args=(self.child_conn,self.FrameNumber))
+        self.UploadProc = Process(target=self.TryToConnect,args=(self.child_conn,self.FrameNumber))
         self.UploadProc.start()
-        self.UploadAttemptTimer.start()
-#        self.UploadAttemptTimer.start(100)
         
-#        waitingcount = 0
-#        while (not parent_conn.poll()):
-#            waitingcount += 1
-#            
-#        self.vdata = parent_conn.recv()
-#        proc.join()
-#        proc.terminate()
-#        self.num_vorts = len(self.vdata)
-#        print "Success"
-#        print waitingcount
+        self.uploadTimer  = QtCore.QTimer()
+        QtCore.QObject.connect(self.uploadTimer, QtCore.SIGNAL("timeout()"), self.DataArrived)
+        self.uploadTimer.start(500)
 
-        self.timer = QtCore.QTimer()
-        QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout()"), self.MeshReady)
+        self.meshTimer = QtCore.QTimer()
+        QtCore.QObject.connect(self.meshTimer, QtCore.SIGNAL("timeout()"), self.MeshReady)
+        
+        
 
-#        name = '/home/rossi/Research/Oseen-explorations/lamb-dipole-perturb-B/lamb-perturb-B'
-#        vtxname = name+'{0:04d}'.format(n)+'.vtx'
-#        try:
-#            f = open(vtxname,'r')
-#            txt = f.read()
-#            f.close()
-#            vs = split(txt)
-#            vdata = map(atof,vs)
-#            self.vdata = reshape(vdata,(len(vdata)/6,6))
-#            self.num_vorts = len(vdata)
-#        except IOError:
-#            print "No vtx file found."
-#            self.GridStatus = -1
-
-# mesh it.
+    def TryToConnect(self,child,n):
+        address = ('localhost', 6000)
+        #address = ('jeremyfisher.math.udel.edu', 6000)
+        #address = ('nutkin', 6000)
+        conn = Client(address, authkey='secret password')
+        conn.send(pickle.dumps(n,pickle.HIGHEST_PROTOCOL))
+        vdata = pickle.loads(conn.recv())
+        conn.send('close')
+        conn.close()
+        child.send(vdata)
+            
     def DataArrived(self):
         if (self.GridStatus == -1):
             if (self.parent_conn.poll()):
@@ -97,56 +86,13 @@ class Vorticity_Frame():
                 self.UploadProc.join()
                 self.UploadProc.terminate()
                 self.num_vorts = len(self.vdata)
-                self.UploadAttemptTimer.cancel()
+                self.uploadTimer.stop()
                 self.GridStatus = 0
-                print 'ticking...'
-                print self.num_vorts
+                self.alert(self.FrameNumber)
             else:
-                print 'tocking...'
                 self.UploadWait += 1
 
-    def DataArrivedAgain(self):
-        if (self.GridStatus == -1):
-            if (self.parent_conn.poll()):
-                self.vdata = self.parent_conn.recv()
-                self.UploadProc.join()
-                self.UploadProc.terminate()
-                self.num_vorts = len(self.vdata)
-                self.UploadAttemptTimer.cancel()
-                self.GridStatus = 0
-                print 'ticking...'
-                print self.num_vorts
-            else:
-                print 'tocking...'
-                self.UploadWait += 1
-
-    def mesh(self,nmesh):
-
-        x = r_[self.x0:self.x1:nmesh*1j]
-        y = r_[self.y0:self.y1:nmesh*1j]
-
-        [self.xm,self.ym] = meshgrid(x,y)
-
-        xtmp = self.xm.reshape(size(self.xm),)
-        ytmp = self.ym.reshape(size(self.ym),)
-
-        w = zeros(size(self.xm))
-
-        for k in range(len(self.vdata)):
-            dx = xtmp-self.vdata[k,0]
-            dy = ytmp-self.vdata[k,1]
-            c = cos(self.vdata[k,5])
-            s = sin(self.vdata[k,5])
-            r2 = dx**2 + dy**2
-            idx = (r2/self.vdata[k,3]>1.0e-10)
-            
-            tmp = -(dx[idx]**2/(c**2/self.vdata[k,4] + s**2/self.vdata[k,4])+ \
-            dy[idx]**2/(s**2/self.vdata[k,4] + c**2/self.vdata[k,4]) + \
-            2.*dx[idx]*dy[idx]*c*s*(1./self.vdata[k,4]+self.vdata[k,4]))/4./self.vdata[k,3]        
-            w[idx] += self.vdata[k,2]*exp(tmp)/2./self.vdata[k,3]
-    
-        print 'done'
-        self.wm = w.reshape((len(x),len(y)))
+# mesh it.
 
     def meshthread(self,nmesh,conn):
 
@@ -176,13 +122,13 @@ class Vorticity_Frame():
         wm = w.reshape((len(x),len(y)))
         conn.send((xm,ym,wm))
 
-    def SpawnMesh(self,nmesh,AlertFcn):
+    def SpawnMesh(self,nmesh):
         self.parent_conn,self.child_conn = Pipe()
         self.proc = Process(target=self.meshthread,args=(nmesh,self.child_conn))
         self.proc.start()
-        self.timer.start(1000)
+        self.meshTimer.start(1000)
         self.GridStatus = 1
-        self.alert = AlertFcn
+        self.alert(self.FrameNumber)
         
     def GrabMesh(self):
         if (self.parent_conn.poll()):
@@ -190,49 +136,12 @@ class Vorticity_Frame():
             self.proc.join()
             self.proc.terminate()
             self.GridStatus=2
+            self.alert(self.FrameNumber)
 
     def MeshReady(self):
         if (self.GridStatus == 1):
             if (self.parent_conn.poll()):
                 self.GrabMesh()
-                self.timer.stop()
-                self.alert(self.FrameNumber)
+                self.meshTimer.stop()
         return(self.GridStatus)
             
-bigv = {}
-
-parent_conn = {}
-child_conn = {}
-p = {}
-
-for k in range(4):
-    bigv[k] = Vorticity_Frame(k)
-#    parent_conn[k],child_conn[k] = Pipe()
-#    p[k] = Process(target=bigv[k].meshthread,args=(100,child_conn[k],))
-#    p[k].start()
-
-#working = True
-#while (working):
-#    working = False
-#    for k in range(4):
-#        print working
-#        print (k,parent_conn[k].poll())
-#        if (not parent_conn[k].poll()):
-#            working = True
-#    raw_input()
-#print 'Everyone is done.'
-#
-#for k in range(4):
-#    print child_conn[k].poll()
-#    bigv[k].xm,bigv[k].ym,bigv[k].wm = parent_conn[k].recv()
-#    print child_conn[k].poll()
-
-#for k in range(4):
-#    p[k].join()
-#    print p[k].is_alive()
-
-#bigv[0].mesh(200)
-
-#plt.ion()
-#plt.pcolormesh(bigv[0].xm,bigv[0].ym,bigv[0].wm)
-#plt.show()

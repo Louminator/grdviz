@@ -10,6 +10,7 @@ from scipy import *
 from string import split,atof,atoi
 
 from vtx import *
+
 #from event import Event
 
 try:
@@ -183,8 +184,44 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
     def mplleaveEvent(self,event):
         print "B-Bye"
 
+    def VtxChangeStatus(self,n):
+        if (self.grddata[n].GridStatus==0):
+            if (len(self.FrameThreads) < self.MaxThreads):
+                self.FrameThreads.append(n)
+                self.grddata[n].SpawnMesh(self.NMesh)
+            else:
+                if (not n in self.FrameQueue):
+                    if (self.Pause.isChecked()):
+                        self.FrameQueue.insert(0,n)
+                    else:
+                        self.FrameQueue.append(n)
+                elif (self.Pause.isChecked()):
+                    self.FrameQueue.remove(n)
+                    self.FrameQueue.insert(0,n)
+            
+        if (self.grddata[n].GridStatus==2):
+            self.FrameThreads.remove(n)
+            if (len(self.FrameQueue) > 0):
+                self.FrameThreads.append(self.FrameQueue[0])
+                self.grddata[self.FrameQueue[0]].SpawnMesh(self.NMesh)
+                self.FrameQueue.remove(self.FrameQueue[0])
+                
+        if (n == self.CurrentFrame.value()):
+            self.newplot()
+
     def FrameDone(self,n):
         if (n == self.CurrentFrame.value()):
+            self.newplot()
+        self.FrameThreads.remove(n)
+        if (len(self.FrameQueue) > 0):
+            self.grddata[self.FrameQueue[0]] = Vorticity_Frame(self.FrameQueue[0])
+            self.FrameThreads.append(self.FrameQueue[0])
+            self.grddata[self.FrameQueue[0]].SpawnMesh(self.NMesh)
+            self.FrameQueue.remove(self.FrameQueue[0])
+
+    def UploadDone(self,n):
+        if (n == self.CurrentFrame.value()):
+            
             self.newplot()
         self.FrameThreads.remove(n)
         if (len(self.FrameQueue) > 0):
@@ -195,32 +232,10 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
 
     def newplot(self):
         a=self.CurrentFrame.value()
-        
         if  (not a in self.grddata):
-            self.grddata[a] = Vorticity_Frame(a)
-        print "Mesh ready..."
-        print self.grddata[a].MeshReady()
-        print len(self.grddata[a].vdata)
-            
-        if (self.grddata[a].MeshReady() == 0):
-            if (len(self.FrameThreads) < self.MaxThreads):
-                self.grddata[a] = Vorticity_Frame(a)
-                self.FrameThreads.append(a)
-                self.grddata[a].SpawnMesh(self.NMesh,self.FrameDone)
-            else:
-                if (not a in self.FrameQueue):
-                    if (self.Pause.isChecked()):
-                        self.FrameQueue.insert(0,a)
-                    else:
-                        self.FrameQueue.append(a)
-                elif (self.Pause.isChecked()):
-                    self.FrameQueue.remove(a)
-                    self.FrameQueue.insert(0,a)
+            self.grddata[a] = Vorticity_Frame(a,self.VtxChangeStatus)
         
-        if (self.grddata[a].MeshReady() == 2):
-            self.grddata[a].GrabMesh()
-#            if (a in self.FrameThreads):
-#                self.FrameThreads.remove(a)
+        if (self.grddata[a].GridStatus == 2):
             self.mplwidget.axes.cla()
             self.mplwidget.axes.pcolormesh(self.grddata[a].xm,self.grddata[a].ym,self.grddata[a].wm,edgecolors='None',shading='None',rasterized=True)
             self.mplwidget.axes.set_xlim((self.xMin.value(),self.xMax.value()))
@@ -232,11 +247,15 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
             self.mplwidget.axes.set_ylim((self.yMin.value(),self.yMax.value()))
             xmid = (self.xMin.value()+self.xMax.value())/2.
             ymid = (self.yMin.value()+self.yMax.value())/2.
-            if (self.grddata[a].MeshReady() == 0):
-                self.mplwidget.axes.text(xmid,ymid,'Working...',fontsize=18, \
+            if (self.grddata[a].GridStatus == 1):
+                self.mplwidget.axes.text(xmid,ymid,'Meshing...',fontsize=18, \
                     horizontalalignment='center',verticalalignment='center',color='red')
                 self.mplwidget.draw()
-            elif (self.grddata[a].MeshReady() == -1):
+            elif (self.grddata[a].GridStatus == 0):
+                self.mplwidget.axes.text(xmid,ymid,'Queued...',fontsize=18, \
+                    horizontalalignment='center',verticalalignment='center',color='red')
+                self.mplwidget.draw()
+            elif (self.grddata[a].GridStatus == -1):
                 self.mplwidget.axes.text(xmid,ymid,'Uploading...',fontsize=18, \
                     horizontalalignment='center',verticalalignment='center',color='red')
                 self.mplwidget.draw()

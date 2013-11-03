@@ -29,6 +29,15 @@ listener = Listener(address, authkey='secret password')
 #    print "No vtx file found."
 #    self.GridStatus = -1
 
+print ""
+print "+-----------------------------------------+"
+print "+ BlobFlow vorticity visualization server +"
+print "+ Louis F. Rossi                          +"
+print "+ Mathematical Sciences                   +"
+print "+ University of Delaware                  +"
+print "+-----------------------------------------+"
+print ""
+
 while True:
     conn = listener.accept()
     print 'connection accepted from', listener.last_accepted
@@ -52,6 +61,7 @@ while True:
                     vdata = reshape(vdata,(len(vdata)/6,6))
                     num_vorts = len(vdata)
                     conn.send(pickle.dumps(vdata,pickle.HIGHEST_PROTOCOL))
+                    print 'Sending frame {0:d} with {1:d} vortices.'.format(n,len(vdata))
                 except IOError:
                     print "No vtx file found."
                     self.GridStatus = -1
