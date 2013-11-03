@@ -78,6 +78,7 @@ class Vorticity_Frame():
             else:
                 print "UploadWaitCounter {0:d} {1:d}".format(self.FrameNumber,self.UploadWait)
                 self.UploadWait += 1
+# Probably do not need this.
 #                if (self.UploadWait > 40000):
 #                    # Transmission lost... Try again.
 #                    print "Trying again {0:d} {1:d}".format(self.FrameNumber,self.UploadWait)
