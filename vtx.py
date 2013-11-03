@@ -21,19 +21,7 @@ import pickle
 class Vorticity_Frame():
     
     def __init__(self,n,AlertFcn):
-        
-#        def TryToConnect(child,n):
-#            address = ('localhost', 6000)
-#            #address = ('jeremyfisher.math.udel.edu', 6000)
-#            #address = ('nutkin', 6000)
-#            conn = Client(address, authkey='secret password')
-#            conn.send(pickle.dumps(n,pickle.HIGHEST_PROTOCOL))
-#            vdata = pickle.loads(conn.recv())
-#            conn.send('close')
-#            print 'Received frame {0:d} with {1:d} vortices.'.format(n,len(vdata))
-#            conn.close()
-#            child.send(vdata)            
-        
+                
         self.FrameNumber = n
 
         self.alert = AlertFcn
@@ -65,8 +53,6 @@ class Vorticity_Frame():
 
         self.meshTimer = QtCore.QTimer()
         QtCore.QObject.connect(self.meshTimer, QtCore.SIGNAL("timeout()"), self.MeshReady)
-        
-        
 
     def TryToConnect(self,child,n):
         address = ('localhost', 6000)
