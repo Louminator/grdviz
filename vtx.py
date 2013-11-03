@@ -56,7 +56,7 @@ class Vorticity_Frame():
 
     def TryToConnect(self,child,n):
         address = ('localhost', 6000)
-        #address = ('jeremyfisher.math.udel.edu', 6000)
+        address = ('jeremyfisher.math.udel.edu', 6000)
         #address = ('nutkin', 6000)
         conn = Client(address, authkey='secret password')
         conn.send(pickle.dumps(n,pickle.HIGHEST_PROTOCOL))
@@ -76,8 +76,18 @@ class Vorticity_Frame():
                 self.GridStatus = 0
                 self.alert(self.FrameNumber)
             else:
+                print "UploadWaitCounter {0:d} {1:d}".format(self.FrameNumber,self.UploadWait)
                 self.UploadWait += 1
-
+#                if (self.UploadWait > 40000):
+#                    # Transmission lost... Try again.
+#                    print "Trying again {0:d} {1:d}".format(self.FrameNumber,self.UploadWait)
+##                    self.UploadProc.join()
+#                    self.UploadProc.terminate()
+#                    self.UploadWait = 0
+#                    self.parent_conn,self.child_conn = Pipe()
+#                    self.UploadProc = Process(target=self.TryToConnect,args=(self.child_conn,self.FrameNumber))
+#                    self.UploadProc.start()
+                    
 # mesh it.
 
     def meshthread(self,nmesh,conn):
