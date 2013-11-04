@@ -56,7 +56,7 @@ class Vorticity_Frame():
 
     def TryToConnect(self,child,n):
         address = ('localhost', 6000)
-        address = ('jeremyfisher.math.udel.edu', 6000)
+        #address = ('jeremyfisher.math.udel.edu', 6000)
         #address = ('nutkin', 6000)
         conn = Client(address, authkey='secret password')
         conn.send(pickle.dumps(n,pickle.HIGHEST_PROTOCOL))
@@ -76,7 +76,7 @@ class Vorticity_Frame():
                 self.GridStatus = 0
                 self.alert(self.FrameNumber)
             else:
-                print "UploadWaitCounter {0:d} {1:d}".format(self.FrameNumber,self.UploadWait)
+                #print "UploadWaitCounter {0:d} {1:d}".format(self.FrameNumber,self.UploadWait)
                 self.UploadWait += 1
 # Probably do not need this.
 #                if (self.UploadWait > 40000):

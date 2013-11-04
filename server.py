@@ -35,6 +35,8 @@ print "+ BlobFlow vorticity visualization server +"
 print "+ Louis F. Rossi                          +"
 print "+ Mathematical Sciences                   +"
 print "+ University of Delaware                  +"
+print "+                                         +"
+print "+ November 2013                           +"
 print "+-----------------------------------------+"
 print ""
 
