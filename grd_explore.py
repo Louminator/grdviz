@@ -45,6 +45,9 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
             self.yMin.setValue(self.num[1])
             self.yMax.setValue(self.num[3])
             
+            self.xViewLen = self.num[2]-self.num[0]
+            self.yViewLen = self.num[3]-self.num[1]
+            
             self.xScale = (self.num[2]-self.num[0])/(self.NMesh-1.)
             self.yScale = (self.num[3]-self.num[1])/(self.NMesh-1.)
             
@@ -77,9 +80,30 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
         self.mplwidget.leaveEvent = self.mplleaveEvent
         self.mplwidget.enterEvent = self.mplenterEvent
         self.mplwidget.wheelEvent = self.mplwheelEvent
+        self.mplwidget.mpl_connect('button_press_event',self.on_press)
+        self.mplwidget.mpl_connect('button_release_event',self.on_release)
         
         self.timer = QtCore.QTimer()
         QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout()"), self.playUpdate)
+        
+    def on_press(self,event):
+        #print('you pressed', event.button, event.xdata, event.ydata)
+        if (event.button == 1):
+            self.xpress = event.xdata
+            self.ypress = event.ydata
+        
+    def on_release(self,event):
+        if (event.button == 1):
+            delx = event.xdata-self.xpress
+            dely = event.ydata-self.ypress
+            del self.xpress 
+            del self.ypress
+            cenx = (self.xMax.value()+self.xMin.value())/2.-delx
+            ceny = (self.yMax.value()+self.yMin.value())/2.-dely
+            self.xMin.setValue(cenx-self.xViewLen/2.)
+            self.xMax.setValue(cenx+self.xViewLen/2.)
+            self.yMin.setValue(ceny-self.yViewLen/2.)
+            self.yMax.setValue(ceny+self.yViewLen/2.)
                 
     def read_grd(self,n):
         name = '/home/rossi/Research/Oseen-explorations/expB-lowres/expB'
