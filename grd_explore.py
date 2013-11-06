@@ -89,6 +89,9 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
     def on_press(self,event):
         #print('you pressed', event.button, event.xdata, event.ydata)
         if (event.button == 1):
+            self.xViewLen = (self.xMax.value()-self.xMin.value())
+            self.yViewLen = (self.yMax.value()-self.yMin.value())
+
             self.xpress = event.xdata
             self.ypress = event.ydata
         
