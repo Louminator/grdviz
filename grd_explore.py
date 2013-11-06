@@ -21,7 +21,7 @@ except AttributeError:
 class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
     def __init__(self, data2plot=None, parent = None):
         self.grddata = {}
-        self.MaxThreads = 4
+        self.MaxThreads = 3
         self.NMesh = 80
         self.FrameThreads = []
         self.FrameQueue =  []
