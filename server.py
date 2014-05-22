@@ -11,8 +11,8 @@ import pickle
 from scipy import *
 from string import split,atof,atoi
 
-#address = ('localhost', 6000)
-address = ('jeremyfisher.math.udel.edu', 6000)
+address = ('localhost', 6000)
+#address = ('jeremyfisher.math.udel.edu', 6000)
 listener = Listener(address, authkey='secret password',backlog=500)
 
 #name = '/home/rossi/Research/Oseen-explorations/lamb-dipole-perturb-B/lamb-perturb-B'

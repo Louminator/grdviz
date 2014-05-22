@@ -56,7 +56,7 @@ class Vorticity_Frame():
 
     def TryToConnect(self,child,n):
         address = ('localhost', 6000)
-        address = ('jeremyfisher.math.udel.edu', 6000)
+#        address = ('jeremyfisher.math.udel.edu', 6000)
         #address = ('nutkin', 6000)
         conn = Client(address, authkey='secret password')
         conn.send(pickle.dumps(n,pickle.HIGHEST_PROTOCOL))
