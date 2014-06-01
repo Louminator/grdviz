@@ -16,6 +16,7 @@ from matplotlibwidget import *
 from scipy import *
 import numpy
 import os
+from string import join
 
 
 class Plot_Widget(QWidget,Ui_BlobFlow_creator):
@@ -42,6 +43,16 @@ class Plot_Widget(QWidget,Ui_BlobFlow_creator):
 
     def plot(self,axes):
         
+# Update with the latest values.        
+        
+        self.xMin = self.xDomainMin.text().toDouble()[0]
+        self.yMin = self.yDomainMin.text().toDouble()[0]
+        self.xMax = self.xDomainMax.text().toDouble()[0]
+        self.yMax = self.yDomainMax.text().toDouble()[0]
+        msg = self.plainTextEdit.toPlainText()
+        self.functionDef.setPlainText(self.str_start+msg+'\n'+self.str_end)
+
+
         x = r_[self.xMin:self.xMax:500j]
         y = r_[self.yMin:self.yMax:500j]
 
@@ -110,12 +121,17 @@ class Plot_Widget(QWidget,Ui_BlobFlow_creator):
         funFile.write(self.plainTextEdit.toPlainText())
         funFile.close()
         
-#    def loadFunction(self):
-#        fname = QtGui.QFileDialog.getOpenFileName(self,'Open file',os.getcwd())
+    def loadFunction(self):
+        fname = QtGui.QFileDialog.getOpenFileName(self,'Open file',os.getcwd())
 #        
-#        funFile = open(fname,"r")
-#        funFile.readlines()
-#        funFile.close()
+        funFile = open(fname,"r")
+        str=funFile.readlines()
+        
+        self.plainTextEdit.setPlainText(QtCore.QString(''.join(str)))
+        self.functionDef.setPlainText(self.str_start+QtCore.QString(''.join(str))+'\n'+self.str_end)
+
+        print QtCore.QString(''.join(str))
+        funFile.close()
         
     def saveDataFile(self):
         fname = QtGui.QFileDialog.getOpenFileName(self,'Open file',os.getcwd())
@@ -158,6 +174,8 @@ class Plot_Widget(QWidget,Ui_BlobFlow_creator):
         simFile.write("GrdNumPts: " + "{0:d}".format(self.nMesh) + "\n")
         simFile.close()
         
+    def quitGUI(self):
+        self.close()
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
@@ -167,19 +185,4 @@ if __name__ == "__main__":
 
     sys.exit(app.exec_())
 
-code_str = """
-def f(x):
-#    asdf
-    return(x*x)
-#print f(3)
-#print "Hello, world"
-#print "Goodbye, world"
 
-"""
-code_obj = compile(code_str, '<string>', 'single')
-
-try:
-    exec code_obj
-except NameError,e:
-    print "error"
-    print e

@@ -223,14 +223,14 @@
   <widget class="QPushButton" name="saveButton">
    <property name="geometry">
     <rect>
-     <x>240</x>
+     <x>360</x>
      <y>490</y>
      <width>141</width>
      <height>24</height>
     </rect>
    </property>
    <property name="text">
-    <string>Create  sim data file</string>
+    <string>Create sim data file</string>
    </property>
   </widget>
   <widget class="QPushButton" name="saveFun">
@@ -244,6 +244,32 @@
    </property>
    <property name="text">
     <string>Save function</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>720</x>
+     <y>490</y>
+     <width>90</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Quit</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="loadFun">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>490</y>
+     <width>101</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Load function</string>
    </property>
   </widget>
  </widget>
@@ -359,7 +385,7 @@
    <slot>saveDataFile()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>291</x>
+     <x>411</x>
      <y>498</y>
     </hint>
     <hint type="destinationlabel">
@@ -379,8 +405,40 @@
      <y>501</y>
     </hint>
     <hint type="destinationlabel">
-     <x>106</x>
-     <y>453</y>
+     <x>134</x>
+     <y>322</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>BlobFlow_creator</receiver>
+   <slot>quitGUI()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>773</x>
+     <y>497</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>759</x>
+     <y>436</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>loadFun</sender>
+   <signal>clicked()</signal>
+   <receiver>BlobFlow_creator</receiver>
+   <slot>loadFunction()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>268</x>
+     <y>498</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>124</x>
+     <y>276</y>
     </hint>
    </hints>
   </connection>
@@ -394,5 +452,7 @@
   <slot>yMaxChanged()</slot>
   <slot>saveDataFile()</slot>
   <slot>saveFunction()</slot>
+  <slot>quitGUI()</slot>
+  <slot>loadFunction()</slot>
  </slots>
 </ui>

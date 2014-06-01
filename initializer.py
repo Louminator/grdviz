@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'initializer.ui'
 #
-# Created: Fri May 30 21:29:41 2014
+# Created: Sat May 31 22:32:45 2014
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -83,11 +83,17 @@ class Ui_BlobFlow_creator(object):
         self.label_9.setGeometry(QtCore.QRect(10, 250, 91, 16))
         self.label_9.setObjectName(_fromUtf8("label_9"))
         self.saveButton = QtGui.QPushButton(BlobFlow_creator)
-        self.saveButton.setGeometry(QtCore.QRect(240, 490, 141, 24))
+        self.saveButton.setGeometry(QtCore.QRect(360, 490, 141, 24))
         self.saveButton.setObjectName(_fromUtf8("saveButton"))
         self.saveFun = QtGui.QPushButton(BlobFlow_creator)
         self.saveFun.setGeometry(QtCore.QRect(110, 490, 101, 24))
         self.saveFun.setObjectName(_fromUtf8("saveFun"))
+        self.pushButton = QtGui.QPushButton(BlobFlow_creator)
+        self.pushButton.setGeometry(QtCore.QRect(720, 490, 90, 24))
+        self.pushButton.setObjectName(_fromUtf8("pushButton"))
+        self.loadFun = QtGui.QPushButton(BlobFlow_creator)
+        self.loadFun.setGeometry(QtCore.QRect(220, 490, 101, 24))
+        self.loadFun.setObjectName(_fromUtf8("loadFun"))
 
         self.retranslateUi(BlobFlow_creator)
         QtCore.QObject.connect(self.plainTextEdit, QtCore.SIGNAL(_fromUtf8("textChanged()")), BlobFlow_creator.functionChanged)
@@ -98,6 +104,8 @@ class Ui_BlobFlow_creator(object):
         QtCore.QObject.connect(self.yDomainMax, QtCore.SIGNAL(_fromUtf8("returnPressed()")), BlobFlow_creator.yMaxChanged)
         QtCore.QObject.connect(self.saveButton, QtCore.SIGNAL(_fromUtf8("clicked()")), BlobFlow_creator.saveDataFile)
         QtCore.QObject.connect(self.saveFun, QtCore.SIGNAL(_fromUtf8("clicked()")), BlobFlow_creator.saveFunction)
+        QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), BlobFlow_creator.quitGUI)
+        QtCore.QObject.connect(self.loadFun, QtCore.SIGNAL(_fromUtf8("clicked()")), BlobFlow_creator.loadFunction)
         QtCore.QMetaObject.connectSlotsByName(BlobFlow_creator)
 
     def retranslateUi(self, BlobFlow_creator):
@@ -121,7 +129,9 @@ class Ui_BlobFlow_creator(object):
         self.label_7.setText(QtGui.QApplication.translate("BlobFlow_creator", "Initial condition entry", None, QtGui.QApplication.UnicodeUTF8))
         self.label_8.setText(QtGui.QApplication.translate("BlobFlow_creator", "Python initial condition definition", None, QtGui.QApplication.UnicodeUTF8))
         self.label_9.setText(QtGui.QApplication.translate("BlobFlow_creator", "Mesh points", None, QtGui.QApplication.UnicodeUTF8))
-        self.saveButton.setText(QtGui.QApplication.translate("BlobFlow_creator", "Create  sim data file", None, QtGui.QApplication.UnicodeUTF8))
+        self.saveButton.setText(QtGui.QApplication.translate("BlobFlow_creator", "Create sim data file", None, QtGui.QApplication.UnicodeUTF8))
         self.saveFun.setText(QtGui.QApplication.translate("BlobFlow_creator", "Save function", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton.setText(QtGui.QApplication.translate("BlobFlow_creator", "Quit", None, QtGui.QApplication.UnicodeUTF8))
+        self.loadFun.setText(QtGui.QApplication.translate("BlobFlow_creator", "Load function", None, QtGui.QApplication.UnicodeUTF8))
 
 from matplotlibwidget import MatplotlibWidget
