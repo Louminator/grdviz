@@ -176,6 +176,36 @@ class Plot_Widget(QWidget,Ui_BlobFlow_creator):
         
     def quitGUI(self):
         self.close()
+        
+    def project(self,x,y,w,alpha):
+        
+# Only works when dx = dy.
+        
+        n = len(x)
+        m = len(y)
+        dx = x[1]-x[0]
+        dy = y[1]-y[0]
+        g = w*dx*dy
+        
+        r = concatenate(([-60., 16., -1.],zeros(n-3)))/12.
+        c = r
+        A = toeplitz(r,c)
+        B = eye(n)
+        r = concatenate(([0., 16., -1.],zeros(m-3)))/12.
+        c = r
+        C = toeplitz(r,c)
+        M = kron(eye(m),A)+kron(C,B)
+        
+        k1    = -alpha*dot(M,g)
+        wtmp1 = g + 0.5*k1
+        k2    = -alpha*dot(M,wtmp1)
+        wtmp2 = g + 0.5*k2
+        k3    = -alpha*dot(M,wtmp2)
+        wtmp3 = g + k3
+        k4    = -alpha*dot(M,wtmp3)
+        
+        return(g + k1/6. + k2/3. + k3/3. + k4/6.)
+        
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
