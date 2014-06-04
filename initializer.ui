@@ -272,6 +272,16 @@
     <string>Load function</string>
    </property>
   </widget>
+  <widget class="MatplotlibWidget" name="projectPreview" native="true">
+   <property name="geometry">
+    <rect>
+     <x>510</x>
+     <y>260</y>
+     <width>261</width>
+     <height>211</height>
+    </rect>
+   </property>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>

@@ -15,6 +15,7 @@ from matplotlibwidget import *
 
 from scipy import *
 import numpy
+from scipy.linalg import toeplitz,kron
 import os
 from string import join
 
@@ -75,7 +76,6 @@ class Plot_Widget(QWidget,Ui_BlobFlow_creator):
             axes=self.mplwidget.figure.add_subplot(111)
                     
             axes2 = axes.pcolormesh(xm,ym,wm,edgecolors='None',shading='None',rasterized=True)
-#        self.mplwidget.figure.add_axes(axes)
     
             self.mplwidget.figure.colorbar(axes2)
             self.mplwidget.draw()
@@ -111,6 +111,7 @@ class Plot_Widget(QWidget,Ui_BlobFlow_creator):
     def plotFunction(self):
             
         self.plot(self.mplwidget.axes)
+        self.plotProject()
         
     def saveFunction(self):
         fname = QtGui.QFileDialog.getOpenFileName(self,'Open file',os.getcwd())
@@ -154,7 +155,7 @@ class Plot_Widget(QWidget,Ui_BlobFlow_creator):
             print "error"
             print e
 
-        w = zeros(size(xm))
+#        w = zeros(size(xm))
         w = f(xtmp,ytmp)  
 
         for i in range(0,len(w)):
@@ -177,7 +178,46 @@ class Plot_Widget(QWidget,Ui_BlobFlow_creator):
     def quitGUI(self):
         self.close()
         
-    def project(self,x,y,w,alpha):
+    def plotProject(self):
+        
+        x = r_[self.xMin:self.xMax:self.nMesh*1j]
+        y = r_[self.yMin:self.yMax:self.nMesh*1j]
+        [xm,ym] = meshgrid(x,y)
+
+        xcoarse = xm.reshape(size(xm),)
+        ycoarse = ym.reshape(size(ym),)
+        
+        try:
+            code_obj = compile(str(self.functionDef.toPlainText()), '<string>', 'single')
+            exec code_obj
+        except Error,e:
+            print "error"
+            print e
+
+#        w = zeros(size(xm))
+        wcoarse = f(xcoarse,ycoarse)  
+        g = self.RHE(x,y,wcoarse,1.)
+        
+        xfine = r_[self.xMin:self.xMax:500j]
+        yfine = r_[self.yMin:self.yMax:500j]
+
+        [xm,ym] = meshgrid(xfine,yfine)
+
+        xfinem = xm.reshape(size(xm),)
+        yfinem = ym.reshape(size(ym),)
+
+        wm = self.project(xfinem,yfinem,xcoarse,ycoarse,g,(x[1]-x[0])**2)
+        
+        wm = wm.reshape(len(xfine),len(yfine))
+        self.projectPreview.figure.clf()
+        axes=self.projectPreview.figure.add_subplot(111)
+                    
+        axes2 = axes.pcolormesh(xm,ym,wm,edgecolors='None',shading='None',rasterized=True)
+    
+        self.projectPreview.figure.colorbar(axes2)
+        self.projectPreview.draw()
+        
+    def RHE(self,x,y,w,alpha):
         
 # Only works when dx = dy.
         
@@ -205,6 +245,18 @@ class Plot_Widget(QWidget,Ui_BlobFlow_creator):
         k4    = -alpha*dot(M,wtmp3)
         
         return(g + k1/6. + k2/3. + k3/3. + k4/6.)
+        
+    def project(self,xm,ym,x,y,g,s2):
+
+        N = len(x)
+        wm = zeros(len(xm))
+        tol = 8.
+        
+        for j in range(0,N):
+            ind = ( (((x[j]-xm)**2 + (y[j]-ym)**2))/4/s2 < tol )
+            wm[ind] += g[j]/4/pi/s2*exp(-((x[j]-xm[ind])**2 + (y[j]-ym[ind])**2)/4./s2)
+            
+        return(wm)
         
 
 if __name__ == "__main__":

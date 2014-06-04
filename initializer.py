@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'initializer.ui'
 #
-# Created: Sat May 31 22:32:45 2014
+# Created: Tue Jun  3 22:50:28 2014
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -94,6 +94,9 @@ class Ui_BlobFlow_creator(object):
         self.loadFun = QtGui.QPushButton(BlobFlow_creator)
         self.loadFun.setGeometry(QtCore.QRect(220, 490, 101, 24))
         self.loadFun.setObjectName(_fromUtf8("loadFun"))
+        self.projectPreview = MatplotlibWidget(BlobFlow_creator)
+        self.projectPreview.setGeometry(QtCore.QRect(510, 260, 261, 211))
+        self.projectPreview.setObjectName(_fromUtf8("projectPreview"))
 
         self.retranslateUi(BlobFlow_creator)
         QtCore.QObject.connect(self.plainTextEdit, QtCore.SIGNAL(_fromUtf8("textChanged()")), BlobFlow_creator.functionChanged)
