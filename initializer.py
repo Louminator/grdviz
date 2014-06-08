@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'initializer.ui'
 #
-# Created: Tue Jun  3 22:50:28 2014
+# Created: Thu Jun  5 20:34:30 2014
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -23,10 +23,16 @@ class Ui_BlobFlow_creator(object):
         self.mplwidget.setObjectName(_fromUtf8("mplwidget"))
         self.plainTextEdit = QtGui.QPlainTextEdit(BlobFlow_creator)
         self.plainTextEdit.setGeometry(QtCore.QRect(180, 30, 311, 221))
+        font = QtGui.QFont()
+        font.setFamily(_fromUtf8("Liberation Mono"))
+        self.plainTextEdit.setFont(font)
         self.plainTextEdit.setLineWrapMode(QtGui.QPlainTextEdit.NoWrap)
         self.plainTextEdit.setObjectName(_fromUtf8("plainTextEdit"))
         self.functionDef = QtGui.QPlainTextEdit(BlobFlow_creator)
         self.functionDef.setGeometry(QtCore.QRect(180, 280, 311, 211))
+        font = QtGui.QFont()
+        font.setFamily(_fromUtf8("Liberation Mono"))
+        self.functionDef.setFont(font)
         self.functionDef.setLineWrapMode(QtGui.QPlainTextEdit.NoWrap)
         self.functionDef.setReadOnly(True)
         self.functionDef.setObjectName(_fromUtf8("functionDef"))
@@ -113,7 +119,7 @@ class Ui_BlobFlow_creator(object):
 
     def retranslateUi(self, BlobFlow_creator):
         BlobFlow_creator.setWindowTitle(QtGui.QApplication.translate("BlobFlow_creator", "BlobFlow Creator", None, QtGui.QApplication.UnicodeUTF8))
-        self.plainTextEdit.setPlainText(QtGui.QApplication.translate("BlobFlow_creator", "    w = cos(x)*sin(y)\n"
+        self.plainTextEdit.setPlainText(QtGui.QApplication.translate("BlobFlow_creator", "    w   = cos(x)*sin(y)\n"
 "    ind = (x>2) & (x<6) & (y>5) & (y<8)\n"
 "    w[ind] = exp(-(x[ind]**2+y[ind]**2)/50)\n"
 "", None, QtGui.QApplication.UnicodeUTF8))

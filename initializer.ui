@@ -32,11 +32,16 @@
      <height>221</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>Liberation Mono</family>
+    </font>
+   </property>
    <property name="lineWrapMode">
     <enum>QPlainTextEdit::NoWrap</enum>
    </property>
    <property name="plainText">
-    <string>    w = cos(x)*sin(y)
+    <string>    w   = cos(x)*sin(y)
     ind = (x&gt;2) &amp; (x&lt;6) &amp; (y&gt;5) &amp; (y&lt;8)
     w[ind] = exp(-(x[ind]**2+y[ind]**2)/50)
 </string>
@@ -50,6 +55,11 @@
      <width>311</width>
      <height>211</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Liberation Mono</family>
+    </font>
    </property>
    <property name="lineWrapMode">
     <enum>QPlainTextEdit::NoWrap</enum>
