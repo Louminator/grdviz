@@ -30,17 +30,15 @@ class Plot_Widget(QWidget,Ui_BlobFlow_creator):
 
         self.str_start = "def f(x,y):\n    w=numpy.empty_like (x)\n"
         self.str_end = "    return(w)"
-        msg = self.plainTextEdit.toPlainText()
-        self.functionDef.setPlainText(self.str_start+msg+'\n'+self.str_end)
 
         self.xMin = self.xDomainMin.text().toDouble()[0]
         self.xMax = self.xDomainMax.text().toDouble()[0]
         self.yMin = self.yDomainMin.text().toDouble()[0]
         self.yMax = self.yDomainMax.text().toDouble()[0]
-        self.nMesh = self.nMesh.text().toInt()[0]
-        
-        self.plot(self.mplwidget.axes)
-        
+        self.nBlob = self.nMesh.text().toInt()[0]
+        self.InterpPopControl = self.interpPopControl.text().toDouble()[0]
+                
+        self.plot(self.mplwidget.axes)        
 
     def plot(self,axes):
         
@@ -50,9 +48,6 @@ class Plot_Widget(QWidget,Ui_BlobFlow_creator):
         self.yMin = self.yDomainMin.text().toDouble()[0]
         self.xMax = self.xDomainMax.text().toDouble()[0]
         self.yMax = self.yDomainMax.text().toDouble()[0]
-        msg = self.plainTextEdit.toPlainText()
-        self.functionDef.setPlainText(self.str_start+msg+'\n'+self.str_end)
-
 
         x = r_[self.xMin:self.xMax:500j]
         y = r_[self.yMin:self.yMax:500j]
@@ -63,9 +58,10 @@ class Plot_Widget(QWidget,Ui_BlobFlow_creator):
         ytmp = ym.reshape(size(ym),)
 
         w = zeros(size(xm))
+        msg = self.plainTextEdit.toPlainText()
                 
         try:
-            code_obj = compile(str(self.functionDef.toPlainText()), '<string>', 'single')
+            code_obj = compile(str(self.str_start+msg+'\n'+self.str_end), '<string>', 'single')
             exec code_obj
             w = f(xtmp,ytmp)       
             wm = w.reshape((len(x),len(y)))
@@ -83,10 +79,6 @@ class Plot_Widget(QWidget,Ui_BlobFlow_creator):
         except IndentationError,e:
             print "Check your indentation"
             print e
-
-    def functionChanged(self):
-        msg = self.plainTextEdit.toPlainText()
-        self.functionDef.setPlainText(self.str_start+msg+'\n'+self.str_end)
         
     def xMinChanged(self):
         self.xMin = self.xDomainMin.text().toDouble()[0]
@@ -104,14 +96,19 @@ class Plot_Widget(QWidget,Ui_BlobFlow_creator):
         self.yMax = self.yDomainMax.text().toDouble()[0]
         self.plotFunction()
                         
-    def nMeshChanged(self):
-        self.nMesh = self.nMesh.text().toInt()[0]
-        self.plotFunction()
+    def nMeshChanged(self,msg):
+        self.nBlob = msg.toInt()[0]
+        self.projectPreview.figure.clf()
+        self.projectPreview.draw()
+        
+    def interpPopControlChanged(self,msg):
+        self.InterpPopControl = msg.toDouble()[0]
+
         
     def plotFunction(self):
             
         self.plot(self.mplwidget.axes)
-        self.plotProject()
+#        self.plotProject()
         
     def saveFunction(self):
         fname = QtGui.QFileDialog.getOpenFileName(self,'Open file',os.getcwd())
@@ -124,14 +121,13 @@ class Plot_Widget(QWidget,Ui_BlobFlow_creator):
         
     def loadFunction(self):
         fname = QtGui.QFileDialog.getOpenFileName(self,'Open file',os.getcwd())
-#        
+        
         funFile = open(fname,"r")
         str=funFile.readlines()
         
         self.plainTextEdit.setPlainText(QtCore.QString(''.join(str)))
-        self.functionDef.setPlainText(self.str_start+QtCore.QString(''.join(str))+'\n'+self.str_end)
 
-        print QtCore.QString(''.join(str))
+#        print QtCore.QString(''.join(str))
         funFile.close()
         
     def saveDataFile(self):
@@ -141,15 +137,16 @@ class Plot_Widget(QWidget,Ui_BlobFlow_creator):
             fname = fname+".dat"
         
         meshFile = open(fname,"w")
-        x = r_[self.xMin:self.xMax:self.nMesh*1j]
-        y = r_[self.yMin:self.yMax:self.nMesh*1j]
+        x = r_[self.xMin:self.xMax:self.nBlob*1j]
+        y = r_[self.yMin:self.yMax:self.nBlob*1j]
         [xm,ym] = meshgrid(x,y)
 
         xtmp = xm.reshape(size(xm),)
         ytmp = ym.reshape(size(ym),)
+        msg = self.plainTextEdit.toPlainText()
         
         try:
-            code_obj = compile(str(self.functionDef.toPlainText()), '<string>', 'single')
+            code_obj = compile(str(self.str_start+msg+'\n'+self.str_end), '<string>', 'single')
             exec code_obj
         except Error,e:
             print "error"
@@ -172,7 +169,7 @@ class Plot_Widget(QWidget,Ui_BlobFlow_creator):
         simFile.write("GrdX1: " + "{0:12.8e}".format(self.xMax) + "\n")
         simFile.write("GrdY0: " + "{0:12.8e}".format(self.yMin) + "\n")
         simFile.write("GrdY1: " + "{0:12.8e}".format(self.yMax) + "\n")
-        simFile.write("GrdNumPts: " + "{0:d}".format(self.nMesh) + "\n")
+        simFile.write("GrdNumPts: " + "{0:d}".format(self.nBlob) + "\n")
         simFile.close()
         
     def quitGUI(self):
@@ -180,23 +177,33 @@ class Plot_Widget(QWidget,Ui_BlobFlow_creator):
         
     def plotProject(self):
         
-        x = r_[self.xMin:self.xMax:self.nMesh*1j]
-        y = r_[self.yMin:self.yMax:self.nMesh*1j]
+#        self.nBlob = self.nMesh.text().toInt()[0]
+        x = r_[self.xMin:self.xMax:self.nBlob*1j]
+        y = r_[self.yMin:self.yMax:self.nBlob*1j]
+        
+        dx = x[1]-x[0]
+        dy = y[1]-y[0]
         [xm,ym] = meshgrid(x,y)
 
         xcoarse = xm.reshape(size(xm),)
         ycoarse = ym.reshape(size(ym),)
+        msg = self.plainTextEdit.toPlainText()
         
         try:
-            code_obj = compile(str(self.functionDef.toPlainText()), '<string>', 'single')
+            code_obj = compile(str(self.str_start+msg+'\n'+self.str_end), '<string>', 'single')
             exec code_obj
         except Error,e:
             print "error"
             print e
 
-#        w = zeros(size(xm))
         wcoarse = f(xcoarse,ycoarse)  
         g = self.RHE(x,y,wcoarse,1.)
+        
+        ind = (abs(g) > self.InterpPopControl*dx*dy)
+        
+        g       = g[ind]
+        xcoarse = xcoarse[ind]
+        ycoarse = ycoarse[ind]
         
         xfine = r_[self.xMin:self.xMax:500j]
         yfine = r_[self.yMin:self.yMax:500j]
@@ -207,6 +214,9 @@ class Plot_Widget(QWidget,Ui_BlobFlow_creator):
         yfinem = ym.reshape(size(ym),)
 
         wm = self.project(xfinem,yfinem,xcoarse,ycoarse,g,(x[1]-x[0])**2)
+        wex = f(xfinem,yfinem)
+        err = max(abs(wm-wex))
+        print err
         
         wm = wm.reshape(len(xfine),len(yfine))
         self.projectPreview.figure.clf()
@@ -215,6 +225,7 @@ class Plot_Widget(QWidget,Ui_BlobFlow_creator):
         axes2 = axes.pcolormesh(xm,ym,wm,edgecolors='None',shading='None',rasterized=True)
     
         self.projectPreview.figure.colorbar(axes2)
+        axes.plot(xcoarse,ycoarse,'k.',markersize=1)
         self.projectPreview.draw()
         
     def RHE(self,x,y,w,alpha):

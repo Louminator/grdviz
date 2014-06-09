@@ -6,85 +6,30 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>980</width>
-    <height>518</height>
+    <width>900</width>
+    <height>578</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>BlobFlow Creator</string>
   </property>
-  <widget class="MatplotlibWidget" name="mplwidget" native="true">
-   <property name="geometry">
-    <rect>
-     <x>510</x>
-     <y>40</y>
-     <width>261</width>
-     <height>211</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QPlainTextEdit" name="plainTextEdit">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>30</y>
-     <width>311</width>
-     <height>221</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Liberation Mono</family>
-    </font>
-   </property>
-   <property name="lineWrapMode">
-    <enum>QPlainTextEdit::NoWrap</enum>
-   </property>
-   <property name="plainText">
-    <string>    w   = cos(x)*sin(y)
-    ind = (x&gt;2) &amp; (x&lt;6) &amp; (y&gt;5) &amp; (y&lt;8)
-    w[ind] = exp(-(x[ind]**2+y[ind]**2)/50)
-</string>
-   </property>
-  </widget>
-  <widget class="QPlainTextEdit" name="functionDef">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>280</y>
-     <width>311</width>
-     <height>211</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Liberation Mono</family>
-    </font>
-   </property>
-   <property name="lineWrapMode">
-    <enum>QPlainTextEdit::NoWrap</enum>
-   </property>
-   <property name="readOnly">
-    <bool>true</bool>
-   </property>
-  </widget>
   <widget class="QPushButton" name="plotButton">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>490</y>
+     <x>420</x>
+     <y>180</y>
      <width>90</width>
      <height>24</height>
     </rect>
    </property>
    <property name="text">
-    <string>Plot</string>
+    <string>&gt; Plot &gt;</string>
    </property>
   </widget>
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>410</x>
      <y>10</y>
      <width>53</width>
      <height>15</height>
@@ -97,9 +42,9 @@
   <widget class="QWidget" name="gridLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>50</y>
-     <width>141</width>
+     <x>410</x>
+     <y>70</y>
+     <width>111</width>
      <height>90</height>
     </rect>
    </property>
@@ -165,36 +110,10 @@
     </item>
    </layout>
   </widget>
-  <widget class="QLineEdit" name="nMesh">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>220</y>
-     <width>71</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>10</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_6">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>190</y>
-     <width>101</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Mesh parameters</string>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_7">
    <property name="geometry">
     <rect>
-     <x>180</x>
+     <x>140</x>
      <y>10</y>
      <width>181</width>
      <height>16</height>
@@ -204,37 +123,11 @@
     <string>Initial condition entry</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_8">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>260</y>
-     <width>201</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Python initial condition definition</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_9">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>250</y>
-     <width>91</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Mesh points</string>
-   </property>
-  </widget>
   <widget class="QPushButton" name="saveButton">
    <property name="geometry">
     <rect>
-     <x>360</x>
-     <y>490</y>
+     <x>10</x>
+     <y>520</y>
      <width>141</width>
      <height>24</height>
     </rect>
@@ -246,8 +139,8 @@
   <widget class="QPushButton" name="saveFun">
    <property name="geometry">
     <rect>
-     <x>110</x>
-     <y>490</y>
+     <x>10</x>
+     <y>260</y>
      <width>101</width>
      <height>24</height>
     </rect>
@@ -259,8 +152,8 @@
   <widget class="QPushButton" name="pushButton">
    <property name="geometry">
     <rect>
-     <x>720</x>
-     <y>490</y>
+     <x>310</x>
+     <y>520</y>
      <width>90</width>
      <height>24</height>
     </rect>
@@ -272,8 +165,8 @@
   <widget class="QPushButton" name="loadFun">
    <property name="geometry">
     <rect>
-     <x>220</x>
-     <y>490</y>
+     <x>300</x>
+     <y>260</y>
      <width>101</width>
      <height>24</height>
     </rect>
@@ -282,15 +175,145 @@
     <string>Load function</string>
    </property>
   </widget>
-  <widget class="MatplotlibWidget" name="projectPreview" native="true">
+  <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>510</x>
-     <y>260</y>
-     <width>261</width>
-     <height>211</height>
+     <x>10</x>
+     <y>30</y>
+     <width>391</width>
+     <height>221</height>
     </rect>
    </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QPlainTextEdit" name="plainTextEdit_2">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>45</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <family>Liberation Mono</family>
+       </font>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="plainText">
+       <string>def f(x,y):
+    w=numpy.empty_like (x)</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPlainTextEdit" name="plainTextEdit">
+      <property name="font">
+       <font>
+        <family>Liberation Mono</family>
+       </font>
+      </property>
+      <property name="lineWrapMode">
+       <enum>QPlainTextEdit::NoWrap</enum>
+      </property>
+      <property name="plainText">
+       <string>    w   = cos(x)*sin(y)
+    ind = (x&gt;2) &amp; (x&lt;6) &amp; (y&gt;5) &amp; (y&lt;8)
+    w[ind] = exp(-(x[ind]**2+y[ind]**2)/50)
+</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPlainTextEdit" name="plainTextEdit_3">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <family>Liberation Mono</family>
+       </font>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="plainText">
+       <string>return(w)</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="verticalLayoutWidget_2">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>20</y>
+     <width>311</width>
+     <height>521</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_2" stretch="5,0,0,0,5">
+    <item>
+     <widget class="MatplotlibWidget" name="mplwidget" native="true"/>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,1">
+      <item>
+       <widget class="QLabel" name="label_9">
+        <property name="text">
+         <string>Mesh points</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="nMesh">
+        <property name="text">
+         <string>10</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="3,1">
+      <item>
+       <widget class="QLabel" name="label_10">
+        <property name="text">
+         <string>Interp. Pop. Control</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="interpPopControl">
+        <property name="text">
+         <string>1.0e-4</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QPushButton" name="FieldInterpolateButton">
+      <property name="text">
+       <string>\/ Field interpolate \/</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="MatplotlibWidget" name="projectPreview" native="true"/>
+    </item>
+   </layout>
   </widget>
  </widget>
  <customwidgets>
@@ -303,30 +326,14 @@
  <resources/>
  <connections>
   <connection>
-   <sender>plainTextEdit</sender>
-   <signal>textChanged()</signal>
-   <receiver>BlobFlow_creator</receiver>
-   <slot>functionChanged()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>314</x>
-     <y>147</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>385</x>
-     <y>364</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>plotButton</sender>
    <signal>clicked()</signal>
    <receiver>BlobFlow_creator</receiver>
    <slot>plotFunction()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>61</x>
-     <y>507</y>
+     <x>471</x>
+     <y>197</y>
     </hint>
     <hint type="destinationlabel">
      <x>74</x>
@@ -341,8 +348,8 @@
    <slot>xMinChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>52</x>
-     <y>61</y>
+     <x>453</x>
+     <y>82</y>
     </hint>
     <hint type="destinationlabel">
      <x>23</x>
@@ -357,8 +364,8 @@
    <slot>xMaxChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>119</x>
-     <y>67</y>
+     <x>519</x>
+     <y>88</y>
     </hint>
     <hint type="destinationlabel">
      <x>156</x>
@@ -373,8 +380,8 @@
    <slot>yMinChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>62</x>
-     <y>113</y>
+     <x>462</x>
+     <y>139</y>
     </hint>
     <hint type="destinationlabel">
      <x>24</x>
@@ -389,8 +396,8 @@
    <slot>yMaxChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>111</x>
-     <y>113</y>
+     <x>519</x>
+     <y>139</y>
     </hint>
     <hint type="destinationlabel">
      <x>101</x>
@@ -405,8 +412,8 @@
    <slot>saveDataFile()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>411</x>
-     <y>498</y>
+     <x>311</x>
+     <y>408</y>
     </hint>
     <hint type="destinationlabel">
      <x>114</x>
@@ -421,8 +428,8 @@
    <slot>saveFunction()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>155</x>
-     <y>501</y>
+     <x>205</x>
+     <y>291</y>
     </hint>
     <hint type="destinationlabel">
      <x>134</x>
@@ -437,12 +444,12 @@
    <slot>quitGUI()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>773</x>
+     <x>323</x>
      <y>497</y>
     </hint>
     <hint type="destinationlabel">
-     <x>759</x>
-     <y>436</y>
+     <x>248</x>
+     <y>464</y>
     </hint>
    </hints>
   </connection>
@@ -453,12 +460,60 @@
    <slot>loadFunction()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>268</x>
-     <y>498</y>
+     <x>318</x>
+     <y>288</y>
     </hint>
     <hint type="destinationlabel">
      <x>124</x>
      <y>276</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>nMesh</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>BlobFlow_creator</receiver>
+   <slot>nMeshChanged(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>831</x>
+     <y>256</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>489</x>
+     <y>473</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>FieldInterpolateButton</sender>
+   <signal>clicked()</signal>
+   <receiver>BlobFlow_creator</receiver>
+   <slot>plotProject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>652</x>
+     <y>313</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>544</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>interpPopControl</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>BlobFlow_creator</receiver>
+   <slot>interpPopControlChanged(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>803</x>
+     <y>285</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>487</x>
+     <y>514</y>
     </hint>
    </hints>
   </connection>
@@ -474,5 +529,8 @@
   <slot>saveFunction()</slot>
   <slot>quitGUI()</slot>
   <slot>loadFunction()</slot>
+  <slot>nMeshChanged(QString)</slot>
+  <slot>plotProject()</slot>
+  <slot>interpPopControlChanged(QString)</slot>
  </slots>
 </ui>
