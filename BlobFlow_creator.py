@@ -103,12 +103,11 @@ class Plot_Widget(QWidget,Ui_BlobFlow_creator):
         
     def interpPopControlChanged(self,msg):
         self.InterpPopControl = msg.toDouble()[0]
-
+        self.projectPreview.figure.clf()
+        self.projectPreview.draw()
         
-    def plotFunction(self):
-            
+    def plotFunction(self):            
         self.plot(self.mplwidget.axes)
-#        self.plotProject()
         
     def saveFunction(self):
         fname = QtGui.QFileDialog.getOpenFileName(self,'Open file',os.getcwd())
@@ -127,7 +126,6 @@ class Plot_Widget(QWidget,Ui_BlobFlow_creator):
         
         self.plainTextEdit.setPlainText(QtCore.QString(''.join(str)))
 
-#        print QtCore.QString(''.join(str))
         funFile.close()
         
     def saveDataFile(self):
@@ -216,7 +214,7 @@ class Plot_Widget(QWidget,Ui_BlobFlow_creator):
         wm = self.project(xfinem,yfinem,xcoarse,ycoarse,g,(x[1]-x[0])**2)
         wex = f(xfinem,yfinem)
         err = max(abs(wm-wex))
-        print err
+        self.Log.appendPlainText('Field interpolation error {1:12.4e} with {0:d} basis functions'.format(len(g),err))
         
         wm = wm.reshape(len(xfine),len(yfine))
         self.projectPreview.figure.clf()
@@ -239,10 +237,12 @@ class Plot_Widget(QWidget,Ui_BlobFlow_creator):
         g = w*dx*dy
         
         r = concatenate(([-60., 16., -1.],zeros(n-3)))/12.
+        r = concatenate(([-980., 270.,-27., 2.],zeros(n-4)))/180.
         c = r
         A = toeplitz(r,c)
         B = eye(n)
         r = concatenate(([0., 16., -1.],zeros(m-3)))/12.
+        r = concatenate(([0., 270.,-27., 2.],zeros(n-4)))/180.
         c = r
         C = toeplitz(r,c)
         M = kron(eye(m),A)+kron(C,B)
@@ -261,7 +261,7 @@ class Plot_Widget(QWidget,Ui_BlobFlow_creator):
 
         N = len(x)
         wm = zeros(len(xm))
-        tol = 8.
+        tol = 16.
         
         for j in range(0,N):
             ind = ( (((x[j]-xm)**2 + (y[j]-ym)**2))/4/s2 < tol )

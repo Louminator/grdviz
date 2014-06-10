@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'initializer.ui'
 #
-# Created: Mon Jun  9 18:12:57 2014
+# Created: Mon Jun  9 18:35:27 2014
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -100,7 +100,7 @@ class Ui_BlobFlow_creator(object):
         self.plainTextEdit_3.setObjectName(_fromUtf8("plainTextEdit_3"))
         self.verticalLayout.addWidget(self.plainTextEdit_3)
         self.verticalLayoutWidget_2 = QtGui.QWidget(BlobFlow_creator)
-        self.verticalLayoutWidget_2.setGeometry(QtCore.QRect(550, 20, 311, 521))
+        self.verticalLayoutWidget_2.setGeometry(QtCore.QRect(530, 30, 311, 521))
         self.verticalLayoutWidget_2.setObjectName(_fromUtf8("verticalLayoutWidget_2"))
         self.verticalLayout_2 = QtGui.QVBoxLayout(self.verticalLayoutWidget_2)
         self.verticalLayout_2.setMargin(0)
@@ -111,7 +111,7 @@ class Ui_BlobFlow_creator(object):
         self.horizontalLayout = QtGui.QHBoxLayout()
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
         self.label_9 = QtGui.QLabel(self.verticalLayoutWidget_2)
-        self.label_9.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_9.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_9.setObjectName(_fromUtf8("label_9"))
         self.horizontalLayout.addWidget(self.label_9)
         self.nMesh = QtGui.QLineEdit(self.verticalLayoutWidget_2)
@@ -123,7 +123,7 @@ class Ui_BlobFlow_creator(object):
         self.horizontalLayout_2 = QtGui.QHBoxLayout()
         self.horizontalLayout_2.setObjectName(_fromUtf8("horizontalLayout_2"))
         self.label_10 = QtGui.QLabel(self.verticalLayoutWidget_2)
-        self.label_10.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_10.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_10.setObjectName(_fromUtf8("label_10"))
         self.horizontalLayout_2.addWidget(self.label_10)
         self.interpPopControl = QtGui.QLineEdit(self.verticalLayoutWidget_2)
@@ -140,6 +140,13 @@ class Ui_BlobFlow_creator(object):
         self.verticalLayout_2.addWidget(self.projectPreview)
         self.verticalLayout_2.setStretch(0, 5)
         self.verticalLayout_2.setStretch(4, 5)
+        self.Log = QtGui.QPlainTextEdit(BlobFlow_creator)
+        self.Log.setGeometry(QtCore.QRect(10, 320, 391, 181))
+        self.Log.setReadOnly(False)
+        self.Log.setObjectName(_fromUtf8("Log"))
+        self.label_6 = QtGui.QLabel(BlobFlow_creator)
+        self.label_6.setGeometry(QtCore.QRect(20, 300, 54, 15))
+        self.label_6.setObjectName(_fromUtf8("label_6"))
 
         self.retranslateUi(BlobFlow_creator)
         QtCore.QObject.connect(self.plotButton, QtCore.SIGNAL(_fromUtf8("clicked()")), BlobFlow_creator.plotFunction)
@@ -154,6 +161,8 @@ class Ui_BlobFlow_creator(object):
         QtCore.QObject.connect(self.nMesh, QtCore.SIGNAL(_fromUtf8("textChanged(QString)")), BlobFlow_creator.nMeshChanged)
         QtCore.QObject.connect(self.FieldInterpolateButton, QtCore.SIGNAL(_fromUtf8("clicked()")), BlobFlow_creator.plotProject)
         QtCore.QObject.connect(self.interpPopControl, QtCore.SIGNAL(_fromUtf8("textChanged(QString)")), BlobFlow_creator.interpPopControlChanged)
+        QtCore.QObject.connect(self.nMesh, QtCore.SIGNAL(_fromUtf8("returnPressed()")), BlobFlow_creator.plotProject)
+        QtCore.QObject.connect(self.interpPopControl, QtCore.SIGNAL(_fromUtf8("returnPressed()")), BlobFlow_creator.plotProject)
         QtCore.QMetaObject.connectSlotsByName(BlobFlow_creator)
 
     def retranslateUi(self, BlobFlow_creator):
@@ -180,10 +189,11 @@ class Ui_BlobFlow_creator(object):
 "    w[ind] = exp(-(x[ind]**2+y[ind]**2)/50)\n"
 "", None, QtGui.QApplication.UnicodeUTF8))
         self.plainTextEdit_3.setPlainText(QtGui.QApplication.translate("BlobFlow_creator", "return(w)", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_9.setText(QtGui.QApplication.translate("BlobFlow_creator", "Mesh points", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_9.setText(QtGui.QApplication.translate("BlobFlow_creator", "Mesh points: ", None, QtGui.QApplication.UnicodeUTF8))
         self.nMesh.setText(QtGui.QApplication.translate("BlobFlow_creator", "10", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_10.setText(QtGui.QApplication.translate("BlobFlow_creator", "Interp. Pop. Control", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_10.setText(QtGui.QApplication.translate("BlobFlow_creator", "Interp. Pop. Control: ", None, QtGui.QApplication.UnicodeUTF8))
         self.interpPopControl.setText(QtGui.QApplication.translate("BlobFlow_creator", "1.0e-4", None, QtGui.QApplication.UnicodeUTF8))
         self.FieldInterpolateButton.setText(QtGui.QApplication.translate("BlobFlow_creator", "\\/ Field interpolate \\/", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_6.setText(QtGui.QApplication.translate("BlobFlow_creator", "Log", None, QtGui.QApplication.UnicodeUTF8))
 
 from matplotlibwidget import MatplotlibWidget

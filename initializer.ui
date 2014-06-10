@@ -251,8 +251,8 @@
   <widget class="QWidget" name="verticalLayoutWidget_2">
    <property name="geometry">
     <rect>
-     <x>550</x>
-     <y>20</y>
+     <x>530</x>
+     <y>30</y>
      <width>311</width>
      <height>521</height>
     </rect>
@@ -266,10 +266,10 @@
       <item>
        <widget class="QLabel" name="label_9">
         <property name="text">
-         <string>Mesh points</string>
+         <string>Mesh points: </string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
        </widget>
       </item>
@@ -287,10 +287,10 @@
       <item>
        <widget class="QLabel" name="label_10">
         <property name="text">
-         <string>Interp. Pop. Control</string>
+         <string>Interp. Pop. Control: </string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
        </widget>
       </item>
@@ -314,6 +314,32 @@
      <widget class="MatplotlibWidget" name="projectPreview" native="true"/>
     </item>
    </layout>
+  </widget>
+  <widget class="QPlainTextEdit" name="Log">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>320</y>
+     <width>391</width>
+     <height>181</height>
+    </rect>
+   </property>
+   <property name="readOnly">
+    <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_6">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>300</y>
+     <width>54</width>
+     <height>15</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Log</string>
+   </property>
   </widget>
  </widget>
  <customwidgets>
@@ -412,8 +438,8 @@
    <slot>saveDataFile()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>311</x>
-     <y>408</y>
+     <x>61</x>
+     <y>528</y>
     </hint>
     <hint type="destinationlabel">
      <x>114</x>
@@ -428,8 +454,8 @@
    <slot>saveFunction()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>205</x>
-     <y>291</y>
+     <x>55</x>
+     <y>271</y>
     </hint>
     <hint type="destinationlabel">
      <x>134</x>
@@ -444,8 +470,8 @@
    <slot>quitGUI()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>323</x>
-     <y>497</y>
+     <x>363</x>
+     <y>527</y>
     </hint>
     <hint type="destinationlabel">
      <x>248</x>
@@ -460,8 +486,8 @@
    <slot>loadFunction()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>318</x>
-     <y>288</y>
+     <x>348</x>
+     <y>268</y>
     </hint>
     <hint type="destinationlabel">
      <x>124</x>
@@ -514,6 +540,38 @@
     <hint type="destinationlabel">
      <x>487</x>
      <y>514</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>nMesh</sender>
+   <signal>returnPressed()</signal>
+   <receiver>BlobFlow_creator</receiver>
+   <slot>plotProject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>776</x>
+     <y>262</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>859</x>
+     <y>232</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>interpPopControl</sender>
+   <signal>returnPressed()</signal>
+   <receiver>BlobFlow_creator</receiver>
+   <slot>plotProject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>820</x>
+     <y>290</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>856</x>
+     <y>302</y>
     </hint>
    </hints>
   </connection>
