@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 """
+Server for BlobFlow Explorer
+
 Created on November 2013
 
-@author: Lou Rossi
+@author: Louis Rossi
+
 """
 
 from multiprocessing.connection import Listener
@@ -10,6 +13,10 @@ from array import array
 import pickle
 from scipy import *
 from string import split,atof,atoi
+
+import os.path
+
+#os.path.isfile(file_path)
 
 address = ('localhost', 6000)
 #address = ('jeremyfisher.math.udel.edu', 6000)
@@ -49,6 +56,16 @@ while True:
             # do something with msg
             if msg == 'close':
                 conn.close()
+                break
+            elif msg == 'inv':
+                upperlim = 0
+                name = '/home/rossi/Research/Oseen-explorations/lamb-dipole-perturb-B/lamb-perturb-B'
+                vtxname = name+'{0:04d}'.format(upperlim)+'.vtx'
+                while os.path.isfile(vtxname):
+                    upperlim += 1
+                    vtxname = name+'{0:04d}'.format(upperlim)+'.vtx'
+                    if not os.path.isfile(vtxname):
+                        conn.send(pickle.dumps(upperlim,pickle.HIGHEST_PROTOCOL))
                 break
             else:
                 n = pickle.loads(msg)

@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-Class definition for vorticity data.
+Class definition for vorticity data
+for BlobFlow Explorer
 
 Created on Fri Aug  2 20:46:35 2013
 
-@author: rossi
+@author: Louis Rossi
 """
 
 from scipy import *

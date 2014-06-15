@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 """
+GUI for creating vorticity initial conditions for BlobFlow.
+
 Created on Sun Mar 30 17:58:59 2014
 
-@author: rossi
+@author: Louis Rossi
 """
 
 from PyQt4 import QtCore, QtGui
@@ -131,8 +133,8 @@ class Plot_Widget(QWidget,Ui_BlobFlow_creator):
     def saveDataFile(self):
         fname = QtGui.QFileDialog.getOpenFileName(self,'Open file',os.getcwd())
 
-        if (fname[-4:] != ".dat"):
-            fname = fname+".dat"
+        if (fname[-4:] != ".grd"):
+            fname = fname+".grd"
         
         meshFile = open(fname,"w")
         x = r_[self.xMin:self.xMax:self.nBlob*1j]
@@ -159,16 +161,24 @@ class Plot_Widget(QWidget,Ui_BlobFlow_creator):
         
         simName = fname[:-3] + "sim"
         simFile = open(simName,"w")
-        simFile.write("FrameStep:" + "\n")
-        simFile.write("EndTime:" + "\n")
-        simFile.write("Viscosity:" + "\n")
+        simFile.write("FrameStep: \n")
+        simFile.write("EndTime: \n")
+        simFile.write("Viscosity: \n")
         simFile.write("GrdInit: " + fname + "\n")
-        simFile.write("GrdX0: " + "{0:12.8e}".format(self.xMin) + "\n")
-        simFile.write("GrdX1: " + "{0:12.8e}".format(self.xMax) + "\n")
-        simFile.write("GrdY0: " + "{0:12.8e}".format(self.yMin) + "\n")
-        simFile.write("GrdY1: " + "{0:12.8e}".format(self.yMax) + "\n")
-        simFile.write("GrdNumPts: " + "{0:d}".format(self.nBlob) + "\n")
+        simFile.write("GrdX0: {0:12.8e}\n".format(self.xMin))
+        simFile.write("GrdX1: {0:12.8e}\n".format(self.xMax))
+        simFile.write("GrdY0: {0:12.8e}\n".format(self.yMin))
+        simFile.write("GrdY1: {0:12.8e}\n".format(self.yMax))
+        simFile.write("GrdNumPts: {0:d}\n".format(self.nBlob))
         simFile.close()
+
+        ctlName = fname[:-3] + "ctl"
+        ctlFile = open(ctlName,"w")
+        ctlFile.write("TimeStep: " + "\n")
+        ctlFile.write("InterpStep: " + "\n")
+        ctlFile.write("InterpPopulationControl: {0:12.8e}\n".format(self.InterpPopControl))
+        ctlFile.write("InterpVar: {0:12.8e}\n".format(((self.xMax-self.xMin)/(self.nBlob))**2))
+        ctlFile.close()
         
     def quitGUI(self):
         self.close()

@@ -25,7 +25,8 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
         self.NMesh = 80
         self.FrameThreads = []
         self.FrameQueue =  []
-
+        
+ 
         QWidget.__init__(self)
         
         super(Plot_Widget, self).__init__(parent)
@@ -63,7 +64,8 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
         
         self.timer = QtCore.QTimer()
         QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout()"), self.playUpdate)
-        
+        self.CheckFileInventory()
+       
     def on_press(self,event):
         #print('you pressed', event.button, event.xdata, event.ydata)
         if (event.button == 1):
@@ -135,6 +137,20 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
         
     def mplleaveEvent(self,event):
         print "B-Bye"
+
+    def CheckFileInventory(self):
+        address = ('localhost', 6000)
+#        address = ('jeremyfisher.math.udel.edu', 6000)
+        #address = ('nutkin', 6000)
+        conn = Client(address, authkey='secret password')
+        conn.send('inv')
+        self.UpperFrame = pickle.loads(conn.recv())
+        conn.send('close')
+        conn.close()
+        print self.UpperFrame
+        self.CurrentFrame.setMaximum(self.UpperFrame)
+        self.timeDial.setMaximum(self.UpperFrame)
+        self.horizontalScrollBar.setMaximum(self.UpperFrame)
 
     def VtxChangeStatus(self,n):
         if (self.grddata[n].GridStatus==0):
