@@ -82,21 +82,33 @@ class Plot_Widget(QWidget,Ui_BlobFlow_creator):
             print "Check your indentation"
             print e
         
-    def xMinChanged(self):
-        self.xMin = self.xDomainMin.text().toDouble()[0]
-        self.plotFunction()
-           
-    def xMaxChanged(self):
-        self.xMax = self.xDomainMax.text().toDouble()[0]
-        self.plotFunction()
+    def xMinChanged(self,msg):
+        self.xMin = msg.toDouble()[0]
+        self.mplwidget.figure.clf()
+        self.mplwidget.draw()
+        self.projectPreview.figure.clf()
+        self.projectPreview.draw()
         
-    def yMinChanged(self):
-        self.yMin = self.yDomainMin.text().toDouble()[0]
-        self.plotFunction()
+    def xMaxChanged(self,msg):
+        self.xMax = msg.toDouble()[0]
+        self.mplwidget.figure.clf()
+        self.mplwidget.draw()
+        self.projectPreview.figure.clf()
+        self.projectPreview.draw()
         
-    def yMaxChanged(self):
-        self.yMax = self.yDomainMax.text().toDouble()[0]
-        self.plotFunction()
+    def yMinChanged(self,msg):
+        self.yMin = msg.toDouble()[0]
+        self.mplwidget.figure.clf()
+        self.mplwidget.draw()
+        self.projectPreview.figure.clf()
+        self.projectPreview.draw()
+        
+    def yMaxChanged(self,msg):
+        self.yMax = msg.toDouble()[0]
+        self.mplwidget.figure.clf()
+        self.mplwidget.draw()
+        self.projectPreview.figure.clf()
+        self.projectPreview.draw()
                         
     def nMeshChanged(self,msg):
         self.nBlob = msg.toInt()[0]
@@ -125,10 +137,12 @@ class Plot_Widget(QWidget,Ui_BlobFlow_creator):
         
         funFile = open(fname,"r")
         str=funFile.readlines()
-        
         self.plainTextEdit.setPlainText(QtCore.QString(''.join(str)))
-
         funFile.close()
+        self.mplwidget.figure.clf()
+        self.mplwidget.draw()
+        self.projectPreview.figure.clf()
+        self.projectPreview.draw()
         
     def saveDataFile(self):
         fname = QtGui.QFileDialog.getOpenFileName(self,'Open file',os.getcwd())
@@ -183,8 +197,24 @@ class Plot_Widget(QWidget,Ui_BlobFlow_creator):
     def quitGUI(self):
         self.close()
         
+    def squareDomain(self):
+        maxAspect = max([(self.xMax-self.xMin)/(self.yMax-self.yMin),(self.yMax-self.yMin)/(self.xMax-self.xMin)])
+        deltaDim = abs((self.xMax-self.xMin) - (self.yMax - self.yMin))
+        if (maxAspect-1.0 > 1.0e-10):
+            if (self.xMax-self.xMin) > (self.yMax-self.yMin):
+                self.yMax += deltaDim/2.
+                self.yMin -= deltaDim/2.
+                self.yDomainMax.setText("{0:4.4f}".format(self.yMax))
+                self.yDomainMin.setText("{0:4.4f}".format(self.yMin))
+            else:
+                self.xMax += deltaDim/2.
+                self.xMin -= deltaDim/2.
+                self.xDomainMax.setText("{0:4.4f}".format(self.xMax))
+                self.xDomainMin.setText("{0:4.4f}".format(self.xMin))
+        self.plotFunction()
+                
     def plotProject(self):
-        
+        self.squareDomain()
 #        self.nBlob = self.nMesh.text().toInt()[0]
         x = r_[self.xMin:self.xMax:self.nBlob*1j]
         y = r_[self.yMin:self.yMax:self.nBlob*1j]

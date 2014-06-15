@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'initializer.ui'
 #
-# Created: Mon Jun  9 18:35:27 2014
+# Created: Sat Jun 14 23:06:44 2014
 #      by: PyQt4 UI code generator 4.9.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -150,10 +150,10 @@ class Ui_BlobFlow_creator(object):
 
         self.retranslateUi(BlobFlow_creator)
         QtCore.QObject.connect(self.plotButton, QtCore.SIGNAL(_fromUtf8("clicked()")), BlobFlow_creator.plotFunction)
-        QtCore.QObject.connect(self.xDomainMin, QtCore.SIGNAL(_fromUtf8("returnPressed()")), BlobFlow_creator.xMinChanged)
-        QtCore.QObject.connect(self.xDomainMax, QtCore.SIGNAL(_fromUtf8("returnPressed()")), BlobFlow_creator.xMaxChanged)
-        QtCore.QObject.connect(self.yDomainMin, QtCore.SIGNAL(_fromUtf8("returnPressed()")), BlobFlow_creator.yMinChanged)
-        QtCore.QObject.connect(self.yDomainMax, QtCore.SIGNAL(_fromUtf8("returnPressed()")), BlobFlow_creator.yMaxChanged)
+        QtCore.QObject.connect(self.xDomainMin, QtCore.SIGNAL(_fromUtf8("textChanged(QString)")), BlobFlow_creator.xMinChanged)
+        QtCore.QObject.connect(self.xDomainMax, QtCore.SIGNAL(_fromUtf8("textChanged(QString)")), BlobFlow_creator.xMaxChanged)
+        QtCore.QObject.connect(self.yDomainMin, QtCore.SIGNAL(_fromUtf8("textChanged(QString)")), BlobFlow_creator.yMinChanged)
+        QtCore.QObject.connect(self.yDomainMax, QtCore.SIGNAL(_fromUtf8("textChanged(QString)")), BlobFlow_creator.yMaxChanged)
         QtCore.QObject.connect(self.saveButton, QtCore.SIGNAL(_fromUtf8("clicked()")), BlobFlow_creator.saveDataFile)
         QtCore.QObject.connect(self.saveFun, QtCore.SIGNAL(_fromUtf8("clicked()")), BlobFlow_creator.saveFunction)
         QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), BlobFlow_creator.quitGUI)
@@ -163,6 +163,10 @@ class Ui_BlobFlow_creator(object):
         QtCore.QObject.connect(self.interpPopControl, QtCore.SIGNAL(_fromUtf8("textChanged(QString)")), BlobFlow_creator.interpPopControlChanged)
         QtCore.QObject.connect(self.nMesh, QtCore.SIGNAL(_fromUtf8("returnPressed()")), BlobFlow_creator.plotProject)
         QtCore.QObject.connect(self.interpPopControl, QtCore.SIGNAL(_fromUtf8("returnPressed()")), BlobFlow_creator.plotProject)
+        QtCore.QObject.connect(self.xDomainMin, QtCore.SIGNAL(_fromUtf8("returnPressed()")), BlobFlow_creator.plotFunction)
+        QtCore.QObject.connect(self.yDomainMin, QtCore.SIGNAL(_fromUtf8("returnPressed()")), BlobFlow_creator.plotFunction)
+        QtCore.QObject.connect(self.xDomainMax, QtCore.SIGNAL(_fromUtf8("returnPressed()")), BlobFlow_creator.plotFunction)
+        QtCore.QObject.connect(self.yDomainMax, QtCore.SIGNAL(_fromUtf8("returnPressed()")), BlobFlow_creator.plotFunction)
         QtCore.QMetaObject.connectSlotsByName(BlobFlow_creator)
 
     def retranslateUi(self, BlobFlow_creator):

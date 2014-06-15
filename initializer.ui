@@ -259,7 +259,7 @@
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_2" stretch="5,0,0,0,5">
     <item>
-     <widget class="MatplotlibWidget" name="mplwidget" native="true"/>
+     <widget class="MatplotlibWidget" name="mplwidget"/>
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,1">
@@ -311,7 +311,7 @@
      </widget>
     </item>
     <item>
-     <widget class="MatplotlibWidget" name="projectPreview" native="true"/>
+     <widget class="MatplotlibWidget" name="projectPreview"/>
     </item>
    </layout>
   </widget>
@@ -369,9 +369,9 @@
   </connection>
   <connection>
    <sender>xDomainMin</sender>
-   <signal>returnPressed()</signal>
+   <signal>textChanged(QString)</signal>
    <receiver>BlobFlow_creator</receiver>
-   <slot>xMinChanged()</slot>
+   <slot>xMinChanged(QString)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>453</x>
@@ -385,25 +385,25 @@
   </connection>
   <connection>
    <sender>xDomainMax</sender>
-   <signal>returnPressed()</signal>
+   <signal>textChanged(QString)</signal>
    <receiver>BlobFlow_creator</receiver>
-   <slot>xMaxChanged()</slot>
+   <slot>xMaxChanged(QString)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>519</x>
-     <y>88</y>
+     <x>491</x>
+     <y>93</y>
     </hint>
     <hint type="destinationlabel">
-     <x>156</x>
-     <y>160</y>
+     <x>371</x>
+     <y>298</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>yDomainMin</sender>
-   <signal>returnPressed()</signal>
+   <signal>textChanged(QString)</signal>
    <receiver>BlobFlow_creator</receiver>
-   <slot>yMinChanged()</slot>
+   <slot>yMinChanged(QString)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>462</x>
@@ -417,17 +417,17 @@
   </connection>
   <connection>
    <sender>yDomainMax</sender>
-   <signal>returnPressed()</signal>
+   <signal>textChanged(QString)</signal>
    <receiver>BlobFlow_creator</receiver>
-   <slot>yMaxChanged()</slot>
+   <slot>yMaxChanged(QString)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>519</x>
      <y>139</y>
     </hint>
     <hint type="destinationlabel">
-     <x>101</x>
-     <y>199</y>
+     <x>269</x>
+     <y>281</y>
     </hint>
    </hints>
   </connection>
@@ -575,14 +575,78 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>xDomainMin</sender>
+   <signal>returnPressed()</signal>
+   <receiver>BlobFlow_creator</receiver>
+   <slot>plotFunction()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>428</x>
+     <y>89</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>418</x>
+     <y>338</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>yDomainMin</sender>
+   <signal>returnPressed()</signal>
+   <receiver>BlobFlow_creator</receiver>
+   <slot>plotFunction()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>442</x>
+     <y>128</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>451</x>
+     <y>352</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>xDomainMax</sender>
+   <signal>returnPressed()</signal>
+   <receiver>BlobFlow_creator</receiver>
+   <slot>plotFunction()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>504</x>
+     <y>78</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>422</x>
+     <y>385</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>yDomainMax</sender>
+   <signal>returnPressed()</signal>
+   <receiver>BlobFlow_creator</receiver>
+   <slot>plotFunction()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>476</x>
+     <y>136</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>454</x>
+     <y>417</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>functionChanged()</slot>
   <slot>plotFunction()</slot>
-  <slot>xMinChanged()</slot>
-  <slot>xMaxChanged()</slot>
-  <slot>yMinChanged()</slot>
-  <slot>yMaxChanged()</slot>
+  <slot>xMinChanged(QString)</slot>
+  <slot>xMaxChanged(QString)</slot>
+  <slot>yMinChanged(QString)</slot>
+  <slot>yMaxChanged(QString)</slot>
   <slot>saveDataFile()</slot>
   <slot>saveFunction()</slot>
   <slot>quitGUI()</slot>
