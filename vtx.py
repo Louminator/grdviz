@@ -21,17 +21,17 @@ import pickle
 
 class Vorticity_Frame():
     
-    def __init__(self,n,AlertFcn):
+    def __init__(self,n,AlertFcn, x0=-2, y0=-2., x1=2., y1=2.):
                 
         self.FrameNumber = n
 
         self.alert = AlertFcn
 
-        self.x0 = -2.
-        self.y0 = -2.
+        self.x0 = x0
+        self.y0 = y0
 
-        self.x1 = 2.
-        self.y1 = 2.
+        self.x1 = x1
+        self.y1 = y1
         self.vdata = []
         
         # GridStatus:
@@ -99,7 +99,7 @@ class Vorticity_Frame():
                     
 # mesh it.
 
-    def meshthread(self,nmesh,conn):
+    def meshthread(self,nmesh,conn,meshtol = 1.0e-1):
 
         x = r_[self.x0:self.x1:nmesh*1j]
         y = r_[self.y0:self.y1:nmesh*1j]
@@ -114,13 +114,13 @@ class Vorticity_Frame():
         for k in range(len(self.vdata)):
             dx = xtmp-self.vdata[k,0]
             dy = ytmp-self.vdata[k,1]
-            c = cos(self.vdata[k,5])
-            s = sin(self.vdata[k,5])
             r2 = dx**2 + dy**2
-            idx = (r2/self.vdata[k,3]>1.0e-10)
-            
-            tmp = -(dx[idx]**2/(c**2/self.vdata[k,4] + s**2/self.vdata[k,4])+ \
-            dy[idx]**2/(s**2/self.vdata[k,4] + c**2/self.vdata[k,4]) + \
+            idx = (r2/self.vdata[k,3]>meshtol)
+
+            c = cos(self.vdata[k,5])
+            s = sin(self.vdata[k,5])            
+            tmp = -(dx[idx]**2/(c**2/self.vdata[k,4] + s**2*self.vdata[k,4])+ \
+            dy[idx]**2/(s**2/self.vdata[k,4] + c**2*self.vdata[k,4]) + \
             2.*dx[idx]*dy[idx]*c*s*(1./self.vdata[k,4]+self.vdata[k,4]))/4./self.vdata[k,3]        
             w[idx] += self.vdata[k,2]*exp(tmp)/2./self.vdata[k,3]
     
