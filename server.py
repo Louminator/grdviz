@@ -83,7 +83,8 @@ while True:
                     print 'Sending frame {0:d} with {1:d} vortices.'.format(n,len(vdata))
                 except IOError:
                     print "No vtx file found."
-                    self.GridStatus = -1
+                    vdata = []
+                    conn.send(pickle.dumps(vdata,pickle.HIGHEST_PROTOCOL))
         else:
             print "Waiting for something to happen."
 

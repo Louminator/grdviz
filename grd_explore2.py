@@ -11,6 +11,8 @@ from string import split,atof,atoi
 
 from vtx import *
 
+from scipy.interpolate import RectBivariateSpline
+
 #from event import Event
 
 try:
@@ -25,10 +27,8 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
         self.NMesh = 80
         self.FrameThreads = []
         self.FrameQueue =  []
-        
  
         QWidget.__init__(self)
-        
         super(Plot_Widget, self).__init__(parent)
         self.setupUi(self)
 
@@ -53,7 +53,18 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
         except IOError:
             print "No egrid.default file found."
         
-            
+        self.domainLL = r_[-2.,-2.]
+        self.domainUR = r_[2.,2.]
+        
+        self.xCenter = (self.domainLL[0]+self.domainUR[0])/2.
+        self.yCenter = (self.domainLL[1]+self.domainUR[1])/2.
+        self.xViewLen = (self.domainUR[0]-self.domainLL[0])*exp(-self.zoom.value()/10.)
+        self.yViewLen = (self.domainUR[1]-self.domainLL[1])*exp(-self.zoom.value()/10.)
+        
+#Maybe time to dump these.
+        self.xScale = self.xViewLen/(self.NMesh-1.)
+        self.yScale = self.yViewLen/(self.NMesh-1.)
+
         self.plot(self.mplwidget.axes)
 #        QtCore.QObject.connect(self.timeDial, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.newplot)
         self.mplwidget.leaveEvent = self.mplleaveEvent
@@ -148,9 +159,9 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
         conn.send('close')
         conn.close()
         print self.UpperFrame
-        self.CurrentFrame.setMaximum(self.UpperFrame)
-        self.timeDial.setMaximum(self.UpperFrame)
-        self.horizontalScrollBar.setMaximum(self.UpperFrame)
+        self.CurrentFrame.setMaximum(self.UpperFrame-1)
+        self.timeDial.setMaximum(self.UpperFrame-1)
+        self.horizontalScrollBar.setMaximum(self.UpperFrame-1)
 
     def VtxChangeStatus(self,n):
         if (self.grddata[n].GridStatus==0):
@@ -199,23 +210,42 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
             self.FrameQueue.remove(self.FrameQueue[0])
 
     def zoomChanged(self):
+        self.xViewLen = (self.domainUR[0]-self.domainLL[0])*exp(-self.zoom.value()/10.)
+        self.yViewLen = (self.domainUR[1]-self.domainLL[1])*exp(-self.zoom.value()/10.)
         self.newplot()
 
     def newplot(self):
         a=self.CurrentFrame.value()
         if  (not a in self.grddata):
-            self.grddata[a] = Vorticity_Frame(a,self.VtxChangeStatus)
+            self.grddata[a] = Vorticity_Frame(a,self.VtxChangeStatus,domainLL=self.domainLL,domainUR=self.domainUR)
         
         if (self.grddata[a].GridStatus == 2):
+            
+            oldx = self.grddata[a].xm[0,:]
+            oldy = self.grddata[a].ym[:,0]
+            oldz = self.grddata[a].wm
+
+            f = RectBivariateSpline(oldx,oldy,oldz)
+            
+            xtemp = r_[self.xCenter-self.xViewLen/2.:self.xCenter+self.xViewLen/2.:200j]
+            ytemp = r_[self.yCenter-self.yViewLen/2.:self.yCenter+self.yViewLen/2.:200j]
+            print ytemp
+            [xm,ym] = meshgrid(xtemp,ytemp)
+
+            z = f(xtemp,ytemp)
+            zm = transpose(z.reshape(shape(xm)))
+            
             self.mplwidget.axes.cla()
-            self.mplwidget.axes.pcolormesh(self.grddata[a].xm,self.grddata[a].ym,self.grddata[a].wm,edgecolors='None',shading='None',rasterized=True)
-            self.mplwidget.axes.set_xlim((self.xCenter-self.xViewLen*exp(-self.zoom.value()/10.),self.xCenter+self.xViewLen*exp(-self.zoom.value()/10.)))
-            self.mplwidget.axes.set_ylim((self.yCenter-self.yViewLen*exp(-self.zoom.value()/10.),self.yCenter+self.yViewLen*exp(-self.zoom.value()/10.)))
+            self.mplwidget.axes.pcolormesh(xm,ym,zm)
+
+#            self.mplwidget.axes.pcolormesh(self.grddata[a].xm,self.grddata[a].ym,self.grddata[a].wm,edgecolors='None',shading='None',rasterized=True)
+            self.mplwidget.axes.set_xlim((self.xCenter-self.xViewLen/2.,self.xCenter+self.xViewLen/2.))
+            self.mplwidget.axes.set_ylim((self.yCenter-self.yViewLen/2.,self.yCenter+self.yViewLen/2.))
             self.mplwidget.draw()
         else:
             self.mplwidget.axes.cla()
-            self.mplwidget.axes.set_xlim((self.xCenter-self.xViewLen*exp(-self.zoom.value()/10.),self.xCenter+self.xViewLen*exp(-self.zoom.value()/10.)))
-            self.mplwidget.axes.set_ylim((self.yCenter-self.yViewLen*exp(-self.zoom.value()/10.),self.yCenter+self.yViewLen*exp(-self.zoom.value()/10.)))
+            self.mplwidget.axes.set_xlim((self.xCenter-self.xViewLen/2.,self.xCenter+self.xViewLen/2.))
+            self.mplwidget.axes.set_ylim((self.yCenter-self.yViewLen/2.,self.yCenter+self.yViewLen/2.))
             if (self.grddata[a].GridStatus == 1):
                 self.mplwidget.axes.text(self.xCenter,self.yCenter,'Meshing...',fontsize=18, \
                     horizontalalignment='center',verticalalignment='center',color='red')

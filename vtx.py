@@ -21,17 +21,17 @@ import pickle
 
 class Vorticity_Frame():
     
-    def __init__(self,n,AlertFcn, x0=-2, y0=-2., x1=2., y1=2.):
+    def __init__(self,n,AlertFcn, domainLL=r_[-2,-2], domainUR = r_[2.,2.]):
                 
         self.FrameNumber = n
 
         self.alert = AlertFcn
 
-        self.x0 = x0
-        self.y0 = y0
+        self.x0 = domainLL[0]
+        self.y0 = domainLL[1]
 
-        self.x1 = x1
-        self.y1 = y1
+        self.x1 = domainUR[0]
+        self.y1 = domainUR[1]
         self.vdata = []
         
         # GridStatus:
@@ -96,6 +96,22 @@ class Vorticity_Frame():
 #                    self.parent_conn,self.child_conn = Pipe()
 #                    self.UploadProc = Process(target=self.TryToConnect,args=(self.child_conn,self.FrameNumber))
 #                    self.UploadProc.start()
+
+    def findFrame():
+        x0 = vdata[0,0]
+        x1 = vdata[0,0]
+        y0 = vdata[0,1]
+        y1 = vdata[0,1]
+        for k in range(1,len(self.vdata)):
+            if (vdata[k,0] < x0):
+                x0 = vdata[k,0]
+            if (vdata[k,0] > x1):
+                x1 = vdata[k,0]
+            if (vdata[k,1] < y0):
+                y0 = vdata[k,1]
+            if (vdata[k,1] > y1):
+                y1 = vdata[k,1]
+        
                     
 # mesh it.
 
