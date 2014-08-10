@@ -115,7 +115,7 @@ class Vorticity_Frame():
                     
 # mesh it.
 
-    def meshthread(self,nmesh,conn,meshtol = 1.0e-1):
+    def meshthread(self,nmesh,conn,meshtol = 1.0e-4):
 
         x = r_[self.x0:self.x1:nmesh*1j]
         y = r_[self.y0:self.y1:nmesh*1j]
