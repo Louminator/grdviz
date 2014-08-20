@@ -224,19 +224,18 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
             oldx = self.grddata[a].xm[0,:]
             oldy = self.grddata[a].ym[:,0]
             oldz = self.grddata[a].wm
-
+            
             f = RectBivariateSpline(oldx,oldy,oldz)
             
             xtemp = r_[self.xCenter-self.xViewLen/2.:self.xCenter+self.xViewLen/2.:200j]
             ytemp = r_[self.yCenter-self.yViewLen/2.:self.yCenter+self.yViewLen/2.:200j]
-            print ytemp
             [xm,ym] = meshgrid(xtemp,ytemp)
 
             z = f(xtemp,ytemp)
             zm = transpose(z.reshape(shape(xm)))
             
             self.mplwidget.axes.cla()
-            self.mplwidget.axes.pcolormesh(xm,ym,zm)
+            self.mplwidget.axes.pcolormesh(xm,ym,zm,vmin=amin(oldz),vmax=amax(oldz))
 
 #            self.mplwidget.axes.pcolormesh(self.grddata[a].xm,self.grddata[a].ym,self.grddata[a].wm,edgecolors='None',shading='None',rasterized=True)
             self.mplwidget.axes.set_xlim((self.xCenter-self.xViewLen/2.,self.xCenter+self.xViewLen/2.))
