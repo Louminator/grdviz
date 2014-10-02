@@ -81,11 +81,12 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
        
     def on_motion(self,event):
         if self.pressed:
-            delx = event.xdata-self.xpress
-            dely = event.ydata-self.ypress
-            self.xCenter -= delx
-            self.yCenter -= dely
-            self.newplot()
+            if ( (event.xdata != None) & (event.ydata != None)):
+                delx = event.xdata-self.xpress
+                dely = event.ydata-self.ypress
+                self.xCenter -= delx
+                self.yCenter -= dely
+                self.newplot()
        
     def on_press(self,event):
         #print('you pressed', event.button, event.xdata, event.ydata)
@@ -98,13 +99,13 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
     def on_release(self,event):
         if (event.button == 1):
             self.pressed = False
-            delx = event.xdata-self.xpress
-            dely = event.ydata-self.ypress
+#            delx = event.xdata-self.xpress
+#            dely = event.ydata-self.ypress
             del self.xpress 
             del self.ypress
-            self.xCenter -= delx
-            self.yCenter -= dely
-            self.newplot()
+#            self.xCenter -= delx
+#            self.yCenter -= dely
+#            self.newplot()
                 
     def read_grd(self,n):
         name = '/home/rossi/Research/Oseen-explorations/expB-lowres/expB'
@@ -134,20 +135,19 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
             self.FrameQueue.insert(0,self.CurrentFrame.value())
             
     def playUpdate(self):
-        x = self.CurrentFrame.value()
         if self.Play.isChecked():
             if (self.CurrentFrame.value() == self.CurrentFrame.maximum()):
                 self.timer.stop()
                 self.Pause.setChecked(True)
             else:
-                self.CurrentFrame.setValue(x+1)
+                self.CurrentFrame.setValue(self.CurrentFrame.value()+1)
                 self.newplot()
         if self.Rewind.isChecked():
             if (self.CurrentFrame.value() == self.CurrentFrame.minimum()):
                 self.timer.stop()
                 self.Pause.setChecked(True)
             else:
-                self.CurrentFrame.setValue(x-1)
+                self.CurrentFrame.setValue(self.CurrentFrame.value()-1)
                 self.CurrentFrame.update()
             self.newplot()            
 
