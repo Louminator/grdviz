@@ -143,12 +143,12 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
                 self.CurrentFrame.setValue(x+1)
                 self.newplot()
         if self.Rewind.isChecked():
-            if (self.CurrentFrame.value() == 0):
-                self.CurrentFrame.setValue(1)
+            if (self.CurrentFrame.value() == self.CurrentFrame.minimum()):
                 self.timer.stop()
                 self.Pause.setChecked(True)
-            self.CurrentFrame.setValue(x-1)
-            self.CurrentFrame.update()
+            else:
+                self.CurrentFrame.setValue(x-1)
+                self.CurrentFrame.update()
             self.newplot()            
 
     def mplwheelEvent(self,event):
