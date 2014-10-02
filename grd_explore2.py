@@ -64,6 +64,8 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
 #Maybe time to dump these.
         self.xScale = self.xViewLen/(self.NMesh-1.)
         self.yScale = self.yViewLen/(self.NMesh-1.)
+        
+        self.pressed = False
 
         self.plot(self.mplwidget.axes)
 #        QtCore.QObject.connect(self.timeDial, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.newplot)
@@ -72,10 +74,18 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
         self.mplwidget.wheelEvent = self.mplwheelEvent
         self.mplwidget.mpl_connect('button_press_event',self.on_press)
         self.mplwidget.mpl_connect('button_release_event',self.on_release)
-        
+        self.mplwidget.mpl_connect('motion_notify_event', self.on_motion)
         self.timer = QtCore.QTimer()
         QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout()"), self.playUpdate)
         self.CheckFileInventory()
+       
+    def on_motion(self,event):
+        if self.pressed:
+            delx = event.xdata-self.xpress
+            dely = event.ydata-self.ypress
+            self.xCenter -= delx
+            self.yCenter -= dely
+            self.newplot()
        
     def on_press(self,event):
         #print('you pressed', event.button, event.xdata, event.ydata)
@@ -83,9 +93,11 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
 
             self.xpress = event.xdata
             self.ypress = event.ydata
+            self.pressed = True
         
     def on_release(self,event):
         if (event.button == 1):
+            self.pressed = False
             delx = event.xdata-self.xpress
             dely = event.ydata-self.ypress
             del self.xpress 
@@ -124,12 +136,12 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
     def playUpdate(self):
         x = self.CurrentFrame.value()
         if self.Play.isChecked():
-            if (self.CurrentFrame.value()>100):
-                self.CurrentFrame.setValue(99)
+            if (self.CurrentFrame.value() == self.CurrentFrame.maximum()):
                 self.timer.stop()
                 self.Pause.setChecked(True)
-            self.CurrentFrame.setValue(x+1)
-            self.newplot()
+            else:
+                self.CurrentFrame.setValue(x+1)
+                self.newplot()
         if self.Rewind.isChecked():
             if (self.CurrentFrame.value() == 0):
                 self.CurrentFrame.setValue(1)
@@ -142,6 +154,11 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
     def mplwheelEvent(self,event):
         print "Weeee"
         print event.delta()
+        if (event.delta()>0):
+            self.zoom.setValue(self.zoom.value()+1)
+        else:
+            self.zoom.setValue(self.zoom.value()-1)
+
         
     def mplenterEvent(self,event):
         print "Welcome"
