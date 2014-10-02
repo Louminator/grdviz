@@ -233,6 +233,7 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
 
     def newplot(self):
         a=self.CurrentFrame.value()
+        
         if  (not a in self.grddata):
             self.grddata[a] = Vorticity_Frame(a,self.VtxChangeStatus,domainLL=self.domainLL,domainUR=self.domainUR)
         
@@ -274,6 +275,11 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
                 self.mplwidget.axes.text(self.xCenter,self.yCenter,'Uploading...',fontsize=18, \
                     horizontalalignment='center',verticalalignment='center',color='red')
                 self.mplwidget.draw()
+
+#  Queue up nearby frames.
+        for k in range(max(a-4,self.CurrentFrame.minimum()),min(a+5,self.CurrentFrame.maximum())):
+            if not k in self.grddata:
+                self.grddata[k] = Vorticity_Frame(k,self.VtxChangeStatus,domainLL=self.domainLL,domainUR=self.domainUR)
  
     def plot(self, axes):
         self.newplot()
