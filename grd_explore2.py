@@ -1,7 +1,9 @@
+#!/usr/bin/python
+
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtGui import QWidget
 
-import sys
+import sys, getopt
 
 from grd_GUI import Ui_BlobFlowExplorer
 from matplotlibwidget import *
@@ -21,7 +23,23 @@ except AttributeError:
     _fromUtf8 = lambda s: s
 
 class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
-    def __init__(self, data2plot=None, parent = None):
+    def __init__(self, argv,data2plot=None, parent = None):
+                
+        try:
+            opts, args = getopt.getopt(argv[1:],"h:p:",["help","host=","port="])
+        except getopt.GetoptError:
+            print 'grd_explore2.py -h <host> -p <port>'
+            sys.exit(2)
+            
+        for opt,arg in opts:
+            if opt == "--help":
+                print 'grd_explore2.py -h <host> -p <port>'
+                sys.exit()
+            if opt in ("-h","--host"):
+                self.host = arg
+            if opt in ("-p","--port"):
+                self.port = atoi(arg)
+        
         self.grddata = {}
         self.MaxThreads = 3
         self.NMesh = 80
@@ -31,27 +49,6 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
         QWidget.__init__(self)
         super(Plot_Widget, self).__init__(parent)
         self.setupUi(self)
-
-# Default domain values
-        try:
-            f = open('/home/rossi/Research/Oseen-explorations/expB-lowres/egrid.default','r')
-            txt = f.read()
-            f.close()
-            nums = split(txt)
-            self.num = map(atof,nums[0:4])
-            self.gridn = atoi(nums[4])
-            
-            self.xViewLen = (self.num[2]-self.num[0])/2.
-            self.yViewLen = (self.num[3]-self.num[1])/2.
-            
-            self.xCenter = (self.num[2]+self.num[0])/2.
-            self.yCenter = (self.num[3]+self.num[1])/2.
-                        
-            self.xScale = (self.num[2]-self.num[0])/(self.NMesh-1.)
-            self.yScale = (self.num[3]-self.num[1])/(self.NMesh-1.)
-                     
-        except IOError:
-            print "No egrid.default file found."
         
         self.domainLL = r_[-2.,-2.]
         self.domainUR = r_[2.,2.]
@@ -69,8 +66,8 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
 
         self.plot(self.mplwidget.axes)
 #        QtCore.QObject.connect(self.timeDial, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.newplot)
-        self.mplwidget.leaveEvent = self.mplleaveEvent
-        self.mplwidget.enterEvent = self.mplenterEvent
+#        self.mplwidget.leaveEvent = self.mplleaveEvent
+#        self.mplwidget.enterEvent = self.mplenterEvent
         self.mplwidget.wheelEvent = self.mplwheelEvent
         self.mplwidget.mpl_connect('button_press_event',self.on_press)
         self.mplwidget.mpl_connect('button_release_event',self.on_release)
@@ -89,7 +86,6 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
                 self.newplot()
        
     def on_press(self,event):
-        #print('you pressed', event.button, event.xdata, event.ydata)
         if (event.button == 1):
 
             self.xpress = event.xdata
@@ -99,28 +95,9 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
     def on_release(self,event):
         if (event.button == 1):
             self.pressed = False
-#            delx = event.xdata-self.xpress
-#            dely = event.ydata-self.ypress
             del self.xpress 
             del self.ypress
-#            self.xCenter -= delx
-#            self.yCenter -= dely
-#            self.newplot()
                 
-    def read_grd(self,n):
-        name = '/home/rossi/Research/Oseen-explorations/expB-lowres/expB'
-        name = '/home/rossi/Research/Oseen-explorations/lamb-dipole-perturb-A'
-        grdname = name+'{0:04d}'.format(n)+'.grd'
-        try:
-            f = open(grdname,'r')
-            txt = f.read()
-            f.close()
-            ws = split(txt)
-            w = map(atof,ws)
-            w = reshape(w,(self.gridn,self.gridn))
-        except IOError:
-            print "No grd file found."
-        return(w)
                                 
     def quit_gui(self):
         self.close()
@@ -152,22 +129,23 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
             self.newplot()            
 
     def mplwheelEvent(self,event):
-        print "Weeee"
-        print event.delta()
         if (event.delta()>0):
             self.zoom.setValue(self.zoom.value()+1)
         else:
             self.zoom.setValue(self.zoom.value()-1)
 
         
-    def mplenterEvent(self,event):
-        print "Welcome"
-        
-    def mplleaveEvent(self,event):
-        print "B-Bye"
+#    def mplenterEvent(self,event):
+#        print "Welcome"
+#        
+#    def mplleaveEvent(self,event):
+#        print "B-Bye"
 
     def CheckFileInventory(self):
-        address = ('localhost', 6000)
+        try:
+            address = (self.host,self.port)
+        except:
+            address = ('localhost', 6000)
 #        address = ('jeremyfisher.math.udel.edu', 6000)
         #address = ('nutkin', 6000)
         conn = Client(address, authkey='secret password')
@@ -287,7 +265,7 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
     Form = QtGui.QWidget()
-    plot = Plot_Widget()
+    plot = Plot_Widget(sys.argv)
     plot.show()
 
     sys.exit(app.exec_())
