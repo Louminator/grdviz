@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 # -*- coding: utf-8 -*-
 """
 Server for BlobFlow Explorer
@@ -16,9 +18,34 @@ from string import split,atof,atoi
 
 import os.path
 
+import sys, getopt
+
 #os.path.isfile(file_path)
 
-address = ('localhost', 6000)
+
+try:
+    opts, args = getopt.getopt(argv[1:],"h:p:",["help","host=","port="])
+except getopt.GetoptError:
+    print 'server.py -h <host> -p <port>'
+    sys.exit(2)
+    
+for opt,arg in opts:
+    if opt == "--help":
+        print 'server.py -h <host> -p <port>'
+        sys.exit()
+    if opt in ("-h","--host"):
+        self.host = arg
+    if opt in ("-p","--port"):
+        self.port = atoi(arg)
+
+try:
+    address = (self.host,self.port)
+except:
+    print "No host specified. Trying localhost."
+    self.host = 'localhost'
+    self.port = 6000
+    address = ('localhost', 6000)
+
 #address = ('jeremyfisher.math.udel.edu', 6000)
 listener = Listener(address, authkey='secret password',backlog=500)
 

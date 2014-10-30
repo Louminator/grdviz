@@ -50,6 +50,7 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
         super(Plot_Widget, self).__init__(parent)
         self.setupUi(self)
         
+
         self.domainLL = r_[-2.,-2.]
         self.domainUR = r_[2.,2.]
         
@@ -64,7 +65,6 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
         
         self.pressed = False
 
-        self.plot(self.mplwidget.axes)
 #        QtCore.QObject.connect(self.timeDial, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.newplot)
 #        self.mplwidget.leaveEvent = self.mplleaveEvent
 #        self.mplwidget.enterEvent = self.mplenterEvent
@@ -74,7 +74,10 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
         self.mplwidget.mpl_connect('motion_notify_event', self.on_motion)
         self.timer = QtCore.QTimer()
         QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout()"), self.playUpdate)
+
         self.CheckFileInventory()
+
+        self.plot(self.mplwidget.axes)
        
     def on_motion(self,event):
         if self.pressed:
@@ -145,6 +148,9 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
         try:
             address = (self.host,self.port)
         except:
+            print "No host specified. Trying localhost."
+            self.host = 'localhost'
+            self.port = 6000
             address = ('localhost', 6000)
 #        address = ('jeremyfisher.math.udel.edu', 6000)
         #address = ('nutkin', 6000)
@@ -183,27 +189,6 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
         if (n == self.CurrentFrame.value()):
             self.newplot()
 
-    def FrameDone(self,n):
-        if (n == self.CurrentFrame.value()):
-            self.newplot()
-        self.FrameThreads.remove(n)
-        if (len(self.FrameQueue) > 0):
-            self.grddata[self.FrameQueue[0]] = Vorticity_Frame(self.FrameQueue[0])
-            self.FrameThreads.append(self.FrameQueue[0])
-            self.grddata[self.FrameQueue[0]].SpawnMesh(self.NMesh)
-            self.FrameQueue.remove(self.FrameQueue[0])
-
-    def UploadDone(self,n):
-        if (n == self.CurrentFrame.value()):
-            
-            self.newplot()
-        self.FrameThreads.remove(n)
-        if (len(self.FrameQueue) > 0):
-            self.grddata[self.FrameQueue[0]] = Vorticity_Frame(self.FrameQueue[0])
-            self.FrameThreads.append(self.FrameQueue[0])
-            self.grddata[self.FrameQueue[0]].SpawnMesh(self.NMesh,self.FrameDone)
-            self.FrameQueue.remove(self.FrameQueue[0])
-
     def zoomChanged(self):
         self.xViewLen = (self.domainUR[0]-self.domainLL[0])*exp(-self.zoom.value()/10.)
         self.yViewLen = (self.domainUR[1]-self.domainLL[1])*exp(-self.zoom.value()/10.)
@@ -213,7 +198,7 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
         a=self.CurrentFrame.value()
         
         if  (not a in self.grddata):
-            self.grddata[a] = Vorticity_Frame(a,self.VtxChangeStatus,domainLL=self.domainLL,domainUR=self.domainUR)
+            self.grddata[a] = Vorticity_Frame(self.host,self.port,a,self.VtxChangeStatus,domainLL=self.domainLL,domainUR=self.domainUR)
         
         if (self.grddata[a].GridStatus == 2):
             
@@ -257,7 +242,7 @@ class Plot_Widget(QWidget,Ui_BlobFlowExplorer):
 #  Queue up nearby frames.
         for k in range(max(a-4,self.CurrentFrame.minimum()),min(a+5,self.CurrentFrame.maximum())):
             if not k in self.grddata:
-                self.grddata[k] = Vorticity_Frame(k,self.VtxChangeStatus,domainLL=self.domainLL,domainUR=self.domainUR)
+                self.grddata[k] = Vorticity_Frame(self.host,self.port,k,self.VtxChangeStatus,domainLL=self.domainLL,domainUR=self.domainUR)
  
     def plot(self, axes):
         self.newplot()

@@ -21,7 +21,7 @@ import pickle
 
 class Vorticity_Frame():
     
-    def __init__(self,n,AlertFcn, domainLL=r_[-2,-2], domainUR = r_[2.,2.]):
+    def __init__(self,host,port,n,AlertFcn, domainLL=r_[-2,-2], domainUR = r_[2.,2.]):
                 
         self.FrameNumber = n
 
@@ -45,7 +45,7 @@ class Vorticity_Frame():
         self.UploadWait = 0
 
         self.parent_conn,self.child_conn = Pipe()
-        self.UploadProc = Process(target=self.TryToConnect,args=(self.child_conn,self.FrameNumber))
+        self.UploadProc = Process(target=self.TryToConnect,args=(self.child_conn,host,port,self.FrameNumber))
         self.UploadProc.start()
         
         self.uploadTimer  = QtCore.QTimer()
@@ -55,8 +55,8 @@ class Vorticity_Frame():
         self.meshTimer = QtCore.QTimer()
         QtCore.QObject.connect(self.meshTimer, QtCore.SIGNAL("timeout()"), self.MeshReady)
 
-    def TryToConnect(self,child,n):
-        address = ('localhost', 6000)
+    def TryToConnect(self,child,host,port,n):
+        address = (host,port)
 #        address = ('jeremyfisher.math.udel.edu', 6000)
         #address = ('nutkin', 6000)
         conn = Client(address, authkey='secret password')
