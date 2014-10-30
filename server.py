@@ -24,7 +24,7 @@ import sys, getopt
 
 
 try:
-    opts, args = getopt.getopt(argv[1:],"h:p:",["help","host=","port="])
+    opts, args = getopt.getopt(sys.argv[1:],"h:p:",["help","host=","port="])
 except getopt.GetoptError:
     print 'server.py -h <host> -p <port>'
     sys.exit(2)
@@ -34,16 +34,16 @@ for opt,arg in opts:
         print 'server.py -h <host> -p <port>'
         sys.exit()
     if opt in ("-h","--host"):
-        self.host = arg
+        host = arg
     if opt in ("-p","--port"):
-        self.port = atoi(arg)
+        port = atoi(arg)
 
 try:
-    address = (self.host,self.port)
+    address = (host,port)
 except:
     print "No host specified. Trying localhost."
-    self.host = 'localhost'
-    self.port = 6000
+    host = 'localhost'
+    port = 6000
     address = ('localhost', 6000)
 
 #address = ('jeremyfisher.math.udel.edu', 6000)
